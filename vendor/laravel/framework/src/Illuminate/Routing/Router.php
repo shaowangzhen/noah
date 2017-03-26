@@ -550,7 +550,6 @@ class Router implements RegistrarContract, BindingRegistrar
                                 $this->container->make('middleware.disable') === true;
 
         $middleware = $shouldSkipMiddleware ? [] : $this->gatherRouteMiddleware($route);
-
         return (new Pipeline($this->container))
                         ->send($request)
                         ->through($middleware)
@@ -572,7 +571,6 @@ class Router implements RegistrarContract, BindingRegistrar
         $middleware = collect($route->gatherMiddleware())->map(function ($name) {
             return (array) MiddlewareNameResolver::resolve($name, $this->middleware, $this->middlewareGroups);
         })->flatten();
-
         return $this->sortMiddleware($middleware);
     }
 

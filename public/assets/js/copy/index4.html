@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Clipboard.js-实现复制文本到剪贴板功能的JavaScript插件|DEMO4_jQuery之家-自由分享jQuery、html5、css3的插件库</title>
+	<link rel="stylesheet" href="http://libs.useso.com/js/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/htmleaf-demo.css">
+	<style type="text/css">
+		.copydiv{
+			border: 1px solid #fff;
+			padding: 1em 0;
+		}
+	</style>
+	<!--[if IE]>
+		<script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<header class="htmleaf-header">
+		<h1>Clipboard.js-实现复制文本到剪贴板功能的JavaScript插件 <span>Modern Approach to Copy Text to Clipboard</span></h1>
+		<div class="htmleaf-links">
+			<a class="htmleaf-icon icon-htmleaf-home-outline" href="http://www.htmleaf.com/" title="jQuery之家" target="_blank"><span> jQuery之家</span></a>
+			<a class="htmleaf-icon icon-htmleaf-arrow-forward-outline" href="http://www.htmleaf.com/jQuery/jquery-tools/201601303087.html" title="返回下载页" target="_blank"><span> 返回下载页</span></a>
+		</div>
+		<div class="htmleaf-demo center">
+		  <a href="index.html">target-input</a>
+		  <a href="index2.html">textarea</a>
+		  <a href="index3.html">div</a>
+		  <a href="index4.html" class="current">text参数</a>
+		</div>
+	</header>
+	<section class="htmleaf-container">
+		<div class="container">
+			<p>通过text参数来进行复制操作</p>
+			<div class="row mt50">
+			  <div class="col-lg-12">
+			    <button type="button" class="btn btn-default">复制</button>
+			  </div><!-- /.col-lg-6 -->
+			</div><!-- /.row -->
+		</div>
+	</section>
+	<footer class="related">
+	    <h3>如果你喜欢这个插件，那么你可能也喜欢:</h3>
+	    <a href="http://www.htmleaf.com/jQuery/jquery-tools/201601283082.html">
+		  <img src="related/1.jpg" width="300" alt="实现HTML编码和解码的JavaScript工具类"/>
+		  <h3>实现HTML编码和解码的JavaScript工具类</h3>
+		</a>
+		<a href="http://www.htmleaf.com/jQuery/jquery-tools/feature-js.html">
+		  <img src="related/2.jpg" width="300" alt="Feature.js-轻量级浏览器特性检测JavaScript库插件"/>
+		  <h3>Feature.js-轻量级浏览器特性检测JavaScript库插件</h3>
+		</a>
+	</footer>
+	
+	<script src="dist/clipboard.min.js"></script>
+
+    <script>
+    var clipboard = new Clipboard('.btn', {
+        text: function() {
+            return '这里是text参数返回的内容';
+        }
+    });
+
+    clipboard.on('success', function(e) {
+    	alert("文字已复制到剪贴板中");
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+</body>
+</html>

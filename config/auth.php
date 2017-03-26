@@ -99,4 +99,30 @@ return [
         ],
     ],
 
+    'actionType' => [
+        '2' => '页面',
+        '3' => '按钮',
+        '4' => '字段',
+        '5' => '日志',
+        '1' => '导航菜单',
+        '100' => '系统',
+    ],
+
+    'system_id' => 1,
+    'admin' => 1,
+
+    //免验证权限controller,actions
+    'exceptPower' => [
+        'maincontroller' => [
+            'main',
+            'editmobile'
+        ],
+        'homecontroller' => [
+            'index'
+        ],
+        //权限code修复
+        'actioncontroller' => [
+            'updatecode'
+        ],
+    ],
 ];

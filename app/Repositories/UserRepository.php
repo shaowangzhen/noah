@@ -213,7 +213,7 @@ class UserRepository extends BaseRepository
     //  所有权限
     public static function getActionsLists()
     {
-        return OpAction::select('actionid')->get()->toarray();
+        return NoahAction::select('actionid')->get()->toarray();
     }
 
     // 权限列表(controller和action都小写)
@@ -305,12 +305,13 @@ class UserRepository extends BaseRepository
      */
     static public function getLoginInfo()
     {
+        $userInfo = [];
         try {
-            $userInfo = Session::get('userInfo');
-            if ($userInfo) {
-                return $userInfo;
+            $userSessionData = Session::get('userInfo');
+            if ($userSessionData) {
+                $userInfo = $userSessionData;
             }
-            return false;
+            return $userInfo;
         } catch (\Exception $e) {
             throw $e;
         }
@@ -323,18 +324,13 @@ class UserRepository extends BaseRepository
      * @param array $powerList 权限数组
      * @return boolean true/false
      */
-    public static function checkPower($controllerName, $actionName, $powerList = false)
+    public static function checkPower($controllerName, $actionName, $powerList)
     {
         try {
             // 为避免参数忽略大小写的情况，再次转化为小写
             $controllerName = strtolower($controllerName);
             $actionName = strtolower($actionName);
-
             $result = true;
-            if (! $powerList) {
-                $userInfo = self::getLoginInfo();
-                $powerList = $userInfo['powers'];
-            }
             // 判断是否需要验证权限
             $checkPower = true;
             // 权限验证例外（不需做权限验证的controller和action）

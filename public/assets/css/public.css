@@ -1,0 +1,10 @@
+.form-inline .form-group
+{  margin: 5px;
+}
+
+ul.ul-flat li
+{
+    float:left;
+    list-style:none;
+    margin-bottom: 10px;
+}
