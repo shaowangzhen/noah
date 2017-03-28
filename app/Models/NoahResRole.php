@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class NoahResRole extends Model
+class NoahResRole extends NoahModel
 {
-    //
+    protected $table = 'noah_resrole';
+    protected $primaryKey = 'resroleid';
 }

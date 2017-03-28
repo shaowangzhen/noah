@@ -13,8 +13,6 @@ class BaseController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $userInfo;
-    protected $userId;
 
     const CODE_SUCCESS = 1;//成功
     const CODE_ERROR = 0;//失败
@@ -29,11 +27,19 @@ class BaseController extends Controller
 
     public function __construct()
     {
-        $users = UserRepository::getLoginInfo();
-        $this->userInfo = $users;
-        $this->userId = isset($users['users']['masterid']) ? $users['users']['masterid'] : 0;
     }
 
+    public function getUserInfo()
+    {
+        return UserRepository::getLoginInfo();
+    }
+
+    public function getUserId()
+    {
+        $users = UserRepository::getLoginInfo();
+        $userId = isset($users['users']['masterid']) ? $users['users']['masterid'] : 0;
+        return $userId;
+    }
     /**
      * 返回json数据
      * @return string

@@ -41,6 +41,9 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->singleton(
+    \Illuminate\Session\Middleware\StartSession::class
+);
 /*
 |--------------------------------------------------------------------------
 | Return The Application

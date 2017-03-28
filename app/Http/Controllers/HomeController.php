@@ -6,11 +6,11 @@ use App\Repositories\UserRepository;
 
 class HomeController extends BaseController {
 
-    public function __construct()
+    public function index()
     {
-        parent::__construct();
-        $roleIds = isset($this->userInfo['roles'])?$this->userInfo['roles']:[];
-        $actionIds = isset($this->userInfo['action_ids'])?$this->userInfo['action_ids']:[];
+        $userInfo = $this->getUserInfo();
+        $roleIds = isset($userInfo['roles'])?$userInfo['roles']:[];
+        $actionIds = isset($userInfo['action_ids'])?$userInfo['action_ids']:[];
         $config = config('auth.admin');
         //如果有超级管理员权限 左侧菜单则全部展示
         if(in_array($config,$roleIds)){
@@ -29,12 +29,8 @@ class HomeController extends BaseController {
                 $tempMenuList[] = $tempMenu;
             }
         }
-        $this->userInfo['menus'] = $tempMenuList;
-    }
-
-    public function index()
-    {
-        $data = ['menus' => $this->userInfo['menus']];
+        $userInfo['menus'] = $tempMenuList;
+        $data = ['menus' => $userInfo['menus']];
         return view('index',$data);
     }
 

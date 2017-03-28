@@ -10,7 +10,6 @@ use App\Models\NoahRoleActions;
 use App\Models\NoahAction;
 use Mockery\CountValidator\Exception;
 use App\Library\RedisCommon;
-use Session;
 use Config;
 use DB;
 
@@ -26,11 +25,15 @@ class UserRepository extends BaseRepository
             'msg' => 'username_in_use'
         ];
         if(trim($mastername) != '') {
-            $userExist = DB::table('op_master')
+            $userExist = DB::table('noah_master')
                 ->select(['masterid'])
-                ->where('mastername', '=', sprintf("%s", Config('common.dealerUserPrefix') . $mastername))
+                ->where('mastername', '=', sprintf("%s", $mastername))
                 ->whereIn('status', [0, 1])
                 ->get();
+
+            if ($userExist) {
+                $userExist = $userExist->toArray();
+            }
             if(empty($userExist)) {
                 $resArr = [
                     'code' => '0',
@@ -52,9 +55,10 @@ class UserRepository extends BaseRepository
             'password',
             'status'
         ];
-        $dbUser = DB::table('op_master')
+        $dbUser = DB::table('noah_master')
             ->select($selectCols)
             ->where('mastername', '=', sprintf("%s", $mastername))
+            ->where('mastername',  $mastername)
             ->orderBy('status','desc')
             ->orderBy('masterid','desc')
             ->first();
@@ -105,7 +109,7 @@ class UserRepository extends BaseRepository
                 'action_ids' => '',
                 'powers' => ''
             ];
-            $userInfo = OpMaster::where('mastername', $mastername)->where('status', '1')->first();
+            $userInfo = NoahMaster::where('mastername', $mastername)->where('status', '1')->first();
             if (!$userInfo) {
                 return ['code' => -1,'msg' => '抱歉，您不是系统用户！'];
             }else if ($result === false) {
@@ -135,7 +139,7 @@ class UserRepository extends BaseRepository
             if(empty($data['powers'])){
                 return ['code' => -1,'msg' => '抱歉，您没有系统权限！'];
             }
-            Session::put('userInfo', $data);
+            session(['userInfo' => $data]);
             return ['code' => 1,'msg' => '成功'];
         } catch (\Exception $e) {
             throw $e;
@@ -156,7 +160,7 @@ class UserRepository extends BaseRepository
     public static function delLoginInfo()
     {
         try {
-            Session::forget('userInfo');
+            session(['userInfo' => '']);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -165,8 +169,8 @@ class UserRepository extends BaseRepository
     // 已有角色列表
     public static function getRoleList($masterid)
     {
-        $roleIds = OpMasterRoles::where('masterid',$masterid)->lists('roleid')->all();
-        $lists = OpRole::whereIn('roleid', $roleIds)->where('status', 1)->get();
+        $roleIds = NoahMasterRoles::where('masterid',$masterid)->pluck('roleid')->all();
+        $lists = NoahRole::whereIn('roleid', $roleIds)->where('status', 1)->get();
         $data = [];
         if (! empty($lists)) {
             foreach ($lists as $v) {
@@ -180,7 +184,7 @@ class UserRepository extends BaseRepository
     // 所有角色列表
     public static function getAllRoleList()
     {
-        $lists = OpRole::where('status', 1)->get();
+        $lists = NoahRole::where('status', 1)->get();
         $data = [];
         if (! empty($lists)) {
             foreach ($lists as $v) {
@@ -199,8 +203,8 @@ class UserRepository extends BaseRepository
                 return $result;
             }
             // 根据roleid，关联erp_role_actions和erp_action，获取roleid对应的actions
-            $actionIds = OpRoleActions::whereIn('roleid',$roleIds)->lists('actionid')->all();
-            $actionList = OpAction::whereIn('actionid',$actionIds)->where('status',1)->orderBy('orderid','asc')->get()->toArray();
+            $actionIds = NoahRoleActions::whereIn('roleid',$roleIds)->pluck('actionid')->all();
+            $actionList = NoahAction::whereIn('actionid',$actionIds)->where('status',1)->orderBy('orderid','asc')->get()->toArray();
             foreach ($actionList as $v) {
                 $result[$v['actionid']] = $v;
             }
@@ -307,7 +311,7 @@ class UserRepository extends BaseRepository
     {
         $userInfo = [];
         try {
-            $userSessionData = Session::get('userInfo');
+            $userSessionData = session('userInfo');
             if ($userSessionData) {
                 $userInfo = $userSessionData;
             }
@@ -361,7 +365,7 @@ class UserRepository extends BaseRepository
      */
     static public function getUserRoleIdsByMasterId($masterid)
     {
-        $userRoleIdsArr= OpMasterRoles::where('masterid',$masterid)->lists('roleid')->all();
+        $userRoleIdsArr= NoahMasterRoles::where('masterid',$masterid)->pluck('roleid')->all();
         return $userRoleIdsArr;
 
 
@@ -377,7 +381,7 @@ class UserRepository extends BaseRepository
 
         $roleids  = is_array($roleids) ? $roleids :explode(',',$roleids);
 
-        $resRoleList = OpResRole::select($columns)->whereIn('roleid',$roleids)->get();
+        $resRoleList = NoahResRole::select($columns)->whereIn('roleid',$roleids)->get();
         $resRoleList = $resRoleList ? $resRoleList->toArray():[];
         return $resRoleList;
 
@@ -395,7 +399,7 @@ class UserRepository extends BaseRepository
 
         $roleids  = is_array($roleids) ? $roleids :explode(',',$roleids);
 
-        $RoleList = OpRole::select($columns)->whereIn('roleid',$roleids)->where('status','1')->get();
+        $RoleList = NoahRole::select($columns)->whereIn('roleid',$roleids)->where('status','1')->get();
         $RoleList = $RoleList ? $RoleList->toArray():[];
         return $RoleList;
 
@@ -413,7 +417,7 @@ class UserRepository extends BaseRepository
 
         $roleIds = is_array($roleids) ? $roleids : explode(',', $roleids);
 
-        $resRoleList = OpResRole::whereIn('roleid', $roleIds)->where('restype',$restype)->lists($columns)->all();
+        $resRoleList = NoahResRole::whereIn('roleid', $roleIds)->where('restype',$restype)->pluck($columns)->all();
 
         return $resRoleList;
     }
@@ -437,7 +441,7 @@ class UserRepository extends BaseRepository
      */
     static public function verifyPasswordByMasterId($password, $masterId)
     {
-        $masterPassword = DB::table('op_master')
+        $masterPassword = DB::table('noah_master')
             ->select(['password'])
             ->where('masterid', '=', $masterId)
             ->first();
@@ -453,7 +457,7 @@ class UserRepository extends BaseRepository
      */
     static public function updatePasswordByMasterId($password, $masterId) {
         try {
-            $master = OpMaster::where('masterid', $masterId)
+            $master = NoahMaster::where('masterid', $masterId)
                 ->first();
             if(is_null($master)) {
                 throw new Exception('user_not_exist');
@@ -501,7 +505,7 @@ class UserRepository extends BaseRepository
      */
     static public function updatePasswordByMasterNameAndMobile($password, $mastername, $mobile) {
         try {
-            $master = OpMaster::where('mastername', $mastername)
+            $master = NoahMaster::where('mastername', $mastername)
                 ->where('mobile', $mobile)
                 ->where('status', '=', 1)
                 ->where('isdealer', '=', 1)
@@ -537,7 +541,7 @@ class UserRepository extends BaseRepository
      */
     static public function checkMobileByMasterName($masterName, $mobile) {
         try {
-            $master = OpMaster::select(['masterid'])
+            $master = NoahMaster::select(['masterid'])
                 ->where('mastername', $masterName)
                 ->where('mobile', $mobile)
                 ->where('status', '=', 1)

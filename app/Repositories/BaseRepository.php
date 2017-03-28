@@ -7,16 +7,16 @@ use Illuminate\Support\Facades\Mail;
 class BaseRepository
 {
 
-    protected $userInfo;
-    protected $userId;
+    public function getUserInfo()
+    {
+        return UserRepository::getLoginInfo();
+    }
 
-
-
-    public function __construct()
+    public function getUserId()
     {
         $users = UserRepository::getLoginInfo();
-        $this->userInfo = $users;
-        $this->userId = isset($users['users']['masterid']) ? $users['users']['masterid'] : 0;
+        $userId = isset($users['users']['masterid']) ? $users['users']['masterid'] : 0;
+        return $userId;
     }
 
     /*

@@ -175,33 +175,6 @@ function selectSearchButton(data) {
     return false;
 }
 
-function searchLdapUser()
-{
-    var mastername = $('#mastername').val();
-    mastername = mastername.trim();
-    if(mastername == '') {
-        $('#searched').val(0);
-        $('#tips_mastername').html('请输入用户名!');
-        return false;
-    }
-    $.getJSON('/admin/master/ajaxldapuser/', {mastername: mastername}, function (data) {
-        if (data) {
-            $('#fullname').val(data.fullname);
-            $('#mobile').val(data.mobile);
-            $('#email').val(data.email);
-            $('#deptname').val(data.deptname);
-            $('#searched').val(1);
-            $('#tips_mastername').html('');
-        } else {
-            $('#fullname').val('');
-            $('#mobile').val('');
-            $('#email').val('');
-            $('#deptname').val('');
-            $('#searched').val(0);
-            $('#tips_mastername').html('用户不存在!');
-        }
-    });
-}
 
 function searchDBUser()
 {

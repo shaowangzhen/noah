@@ -30,42 +30,37 @@ return [
     | choice installed on your machine before you begin development.
     |
     */
-
     'connections' => [
 
         'sqlite' => [
-            'driver' => 'sqlite',
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
-            'prefix' => '',
+            'driver'   => 'sqlite',
+            'database' => storage_path('database.sqlite'),
+            'prefix'   => '',
         ],
 
         'mysql' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
-        ],
+            'read' => [
+                'host'      => $_SERVER['DB_NOAH_HOST'],
+                'port'      => $_SERVER['DB_NOAH_PORT'],
+                'username'  => $_SERVER['DB_NOAH_USER'],
+                'password'  => $_SERVER['DB_NOAH_PASS'],
+                'database'  => $_SERVER['DB_NOAH_NAME'],
+            ],
+            'write' => [
+                'host'      => $_SERVER['DB_NOAH_HOST'],
+                'port'      => $_SERVER['DB_NOAH_PORT'],
+                'username'  => $_SERVER['DB_NOAH_USER'],
+                'password'  => $_SERVER['DB_NOAH_PASS'],
+                'database'  => $_SERVER['DB_NOAH_NAME'],
+            ],
 
-        'pgsql' => [
-            'driver' => 'pgsql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'schema' => 'public',
-            'sslmode' => 'prefer',
+            'driver'    => 'mysql',
+            'charset'   => 'utf8mb4',
+            'collation' => 'utf8mb4_general_ci',
+            'prefix'    => '',
+            'strict'    => false,
+            'unix_socket' => '/var/lib/mysql/mysql.sock',
         ],
-
     ],
 
     /*
