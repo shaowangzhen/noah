@@ -94,27 +94,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <form action="/admin/roleaction" method="post" class="city_form">
-                                        @foreach($citys as $provincename=>$procitys)
-                                        <h5>{{$provincename}}</h5>
-                                        @foreach($procitys as $city)
-                                        <label class="checkbox-inline">
-                                        @if(isset($city['checked']))
-                                        <input type="checkbox" name="citys[]" value="{{$city['cityid']}}" checked />{{$city['cityname']}}
-                                        @else
-                                        <input type="checkbox" name="citys[]" value="{{$city['cityid']}}" />{{$city['cityname']}}
-                                        @endif
-                                        </label>
-                                        @endforeach
-                                        <br />
-                                        @endforeach
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                                        <input type="hidden" name="city" value="1"/>
-                                        <input type="hidden" name="role_id" value="{{$role_id}}"/>
-                                    </form>  
+
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                         <!--数据权限end-->
                     </div>
                 </div>

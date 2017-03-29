@@ -40,18 +40,18 @@ return [
 
         'mysql' => [
             'read' => [
-                'host'      => $_SERVER['DB_NOAH_HOST'],
-                'port'      => $_SERVER['DB_NOAH_PORT'],
-                'username'  => $_SERVER['DB_NOAH_USER'],
-                'password'  => $_SERVER['DB_NOAH_PASS'],
-                'database'  => $_SERVER['DB_NOAH_NAME'],
+                'host'      => env('DB_NOAH_HOST'),
+                'port'      => env('DB_NOAH_PORT'),
+                'username'  => env('DB_NOAH_USER'),
+                'password'  => env('DB_NOAH_PASS'),
+                'database'  => env('DB_NOAH_NAME'),
             ],
             'write' => [
-                'host'      => $_SERVER['DB_NOAH_HOST'],
-                'port'      => $_SERVER['DB_NOAH_PORT'],
-                'username'  => $_SERVER['DB_NOAH_USER'],
-                'password'  => $_SERVER['DB_NOAH_PASS'],
-                'database'  => $_SERVER['DB_NOAH_NAME'],
+                'host'      => env('DB_NOAH_HOST'),
+                'port'      => env('DB_NOAH_PORT'),
+                'username'  => env('DB_NOAH_USER'),
+                'password'  => env('DB_NOAH_PASS'),
+                'database'  => env('DB_NOAH_NAME'),
             ],
 
             'driver'    => 'mysql',

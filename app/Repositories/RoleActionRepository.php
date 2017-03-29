@@ -2,19 +2,18 @@
 
 namespace App\Repositories;
 
-use App\Models\OpRoleActions;
-use App\Models\OpAction;
-use App\Models\OpResRole;
+use App\Models\NoahRoleActions;
+use App\Models\NoahAction;
+use App\Models\NoahResRole;
 use DB;
 
-class RoleActionRepository extends ZebraRepository
+class RoleActionRepository extends BaseRepository
 {
 
     protected $roleActions;
 
-    public function __construct(OpRoleActions $roleActions)
+    public function __construct(NoahRoleActions $roleActions)
     {
-        parent::__construct();
         $this->roleActions = $roleActions;
     }
 
@@ -33,7 +32,7 @@ class RoleActionRepository extends ZebraRepository
      */
     public function getActionsLists()
     {
-        return OpAction::select('actionid')->where('status',1)->get()->toarray();
+        return NoahAction::select('actionid')->where('status',1)->get()->toarray();
     }
 
     /**

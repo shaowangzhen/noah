@@ -6,16 +6,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\ZebraController;
+use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Repositories\RoleActionRepository;
 use App\Repositories\ActionRepository;
 use App\Repositories\RoleRepository;
-use App\Repositories\CityRepository;
 use App\Repositories\UserRepository;
 use DB;
 
-class RoleActionController extends ZebraController
+class RoleActionController extends BaseController
 {
 
     protected $roleActionRepo;
@@ -45,13 +44,8 @@ class RoleActionController extends ZebraController
         $getList = $actionRepo->getRoleAction($actions, $roleActionsList);
         $json = json_encode($getList);
 
-        //数据权限
-        //$citys = CityRepository::getAreaCitys();      //按区域
-        $citys = CityRepository::getProCitys();         //按省
-        $resroles = UserRepository::listResRoleByRoleids($id, 'resid', 'city');
-        $cityList = $this->roleActionRepo->getRoleCity($citys, $resroles);
 
-        $data = ['json' => $json, 'role_id' => $id, 'citys' => $cityList];
+        $data = ['json' => $json, 'role_id' => $id];
 
         return view('admin.roleaction', $data);
     }
@@ -68,10 +62,8 @@ class RoleActionController extends ZebraController
             $res = $this->roleActionRepo->editRoleCitys($info);
             if($res){
                 return $this->setCode(self::CODE_SUCCESS)->setMsg('操作成功')->toJson();
-                die();
             } else {
                 return $this->setCode(self::CODE_ERROR)->setMsg('失败操作')->toJson();
-                die();
             }
         }
         $role_id = $info['role_id'];
@@ -85,7 +77,6 @@ class RoleActionController extends ZebraController
                         // 回滚
                         DB::rollback();
                         return $this->setCode(self::CODE_ERROR)->setMsg('失败操作')->toJson();
-                        die();
                     }
                 }
             }
@@ -94,19 +85,17 @@ class RoleActionController extends ZebraController
                 foreach ($info['add'] as $k => $v) {
                     $data['roleid'] = $role_id;
                     $data['actionid'] = $v;
-                    $data['creatorid'] = $this->userId;
+                    $data['creatorid'] = $this->getUserId();
                     if (!$this->roleActionRepo->createData($data)) {
                         // 回滚
                         DB::rollback();
                         return $this->setCode(self::CODE_ERROR)->setMsg('失败操作')->toJson();
-                        die();
                     }
                 }
             }
             // 提交
             DB::commit();
             return $this->setCode(self::CODE_SUCCESS)->setMsg('删除成功')->toJson();
-            die();
         } else {
             return $this->setCode(self::CODE_ERROR)->setMsg('角色权限未发生改变')->toJson();
         }

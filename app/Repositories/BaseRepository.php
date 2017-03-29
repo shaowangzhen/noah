@@ -33,7 +33,7 @@ class BaseRepository
             if (empty($mailFrom)) {
                 $mailFrom = config('mail.username');
             }
-            $title = $_SERVER['SITE_ENV'] == 'testing' ? '【测试机】优信二手车' : '优信二手车';
+            $title = env('SITE_ENV') == 'testing' ? '【测试机】Noah' : 'Noah';
             $message->from($mailFrom, $title);
             foreach ($mailTo as $address) {
                 $message->to($address);
@@ -47,7 +47,7 @@ class BaseRepository
             if (empty($mailFrom)) {
                 $mailFrom = config('mail.username');
             }
-            $title = $_SERVER['SITE_ENV'] == 'testing' ? '【测试机】优信二手车' : '优信二手车';
+            $title = env('SITE_ENV') == 'testing' ? '【测试机】Noah' : 'Noah';
             $message->from($mailFrom, $title);
             foreach ($mailTo as $address) {
                 $message->to($address);
