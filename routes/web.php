@@ -20,6 +20,7 @@ Route::group([
     Route::post('/editmobile', 'MainController@editMobile');
     Route::match(['get', 'post'], '/editpassword', 'MainController@editPassword');
 });
+
 //系统
 Route::group([
     'prefix' => 'admin',

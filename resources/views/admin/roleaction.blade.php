@@ -40,11 +40,6 @@
                             岗位权限
                         </a>
                     </li>
-                    <li>
-                        <a data-toggle="tab" href="#tap_two">
-                            数据权限
-                        </a>
-                    </li>
                 </ul>
                 <div class="tab-content tabs-flat">
                     <div id="tap_one" class="tab-pane in active">
@@ -113,10 +108,10 @@
 @endsection
 @section('footerjs')
 <script>
-    var url = "{{url()}}";
+    var url = "{{url('/')}}";
     var role_id = "{{$role_id}}";
     var defaultData = <?php echo htmlspecialchars_decode($json);?>;
 </script>
-<script src="{{url()}}/assets/js/treeview/bootstrap-treeview.min.js"></script>
-<script src="{{url()}}/assets/js/admin/roleaction.js?v=1"></script>
+<script src="{{url('/')}}/assets/js/treeview/bootstrap-treeview.min.js"></script>
+<script src="{{url('/')}}/assets/js/admin/roleaction.js?v=1"></script>
 @endsection

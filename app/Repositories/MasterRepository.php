@@ -78,27 +78,29 @@ class MasterRepository extends BaseRepository
     {
         $user = $this->getUserInfo();
         $userId = $user['users']['masterid'];
-        $erpMaster = new NoahMaster;
+        $noahMaster = new NoahMaster;
         //查找是否已经存在
-        $useOld = $erpMaster->getOne('masterid',['in'=>['status'=>[0,1]],'mastername'=>$data['mastername']]);
+        $useOld = $noahMaster->getOne('masterid',['in'=>['status'=>[0,1]],'mastername'=>$data['mastername']]);
         if(!empty($useOld)){
             return '该用户名已经添加,不能重复添加';
         }
 
-        $erpMaster->fullname = $data['fullname'];
-        $erpMaster->mobile = $data['mobile'];
-        $erpMaster->email = $data['email'];
-        $erpMaster->deptname = $data['deptname'];
-        $erpMaster->mastername = $data['mastername'];
+        $noahMaster->fullname = isset($data['fullname'])?$data['fullname']:'';
+        $noahMaster->mobile = isset($data['mobile'])?$data['mobile']:'';
+        $noahMaster->email = isset($data['email'])?$data['email']:'';
+        $noahMaster->deptname = isset($data['deptname'])?$data['deptname']:'';
+        $noahMaster->mastername = isset($data['mastername'])?$data['mastername']:'';
         if(isset($data['password'])) {
-            $erpMaster->password = UserRepository::makePassword(trim($data['password']));
+            $noahMaster->password = UserRepository::makePassword(trim($data['password']));
+        } else {
+            $noahMaster->password = UserRepository::makePassword(trim($data['mastername']));
         }
-        $erpMaster->creatorid = $userId;
-        $erpMaster->status = $data['status'];
+        $noahMaster->creatorid = $userId;
+        $noahMaster->status = $data['status'];
 
         DB::beginTransaction();
-        $flag = $erpMaster->save();
-        $masterid = $erpMaster->masterid;
+        $flag = $noahMaster->save();
+        $masterid = $noahMaster->masterid;
         //角色添加
         $roleIds = !empty($data['roleids']) ? $data['roleids'] : [];
         if($flag && $roleIds){
@@ -125,19 +127,19 @@ class MasterRepository extends BaseRepository
     {
         $user = $this->getUserInfo();
         $userId = $user['users']['masterid'];
-        $erpMaster = NoahMaster::find($masterid);
-        $erpMaster->fullname = $data['fullname'];
-        $erpMaster->mobile = $data['mobile'];
-        $erpMaster->email = $data['email'];
-        $erpMaster->deptname = $data['deptname'];
+        $noahMaster = NoahMaster::find($masterid);
+        $noahMaster->fullname = $data['fullname'];
+        $noahMaster->mobile = $data['mobile'];
+        $noahMaster->email = $data['email'];
+        $noahMaster->deptname = $data['deptname'];
         if(isset($data['password']) && trim($data['password']) != '') {
-            $erpMaster->password = UserRepository::makePassword(trim($data['password']));
+            $noahMaster->password = UserRepository::makePassword(trim($data['password']));
         }
-        $erpMaster->creatorid = $userId;
-        $erpMaster->status = $data['status'];
+        $noahMaster->creatorid = $userId;
+        $noahMaster->status = $data['status'];
 
         DB::beginTransaction();
-        $flag = $erpMaster->save();
+        $flag = $noahMaster->save();
         //角色修改
         $roles = UserRepository::getRoleList($masterid);
         $hasIds = $roles?array_flip($roles):[];
@@ -180,32 +182,6 @@ class MasterRepository extends BaseRepository
             echo $sql;die;
         }else{
             DB::insert($sql);
-        }
-    }
-    
-    /**
-     * 持续同步cp用户(保证id一致)
-     */
-    public function checkCpMaster()
-    {
-        $lastMaster = $this->master->getOne('masterid', '', ['masterid'=>'desc']);
-        $lastId = $lastMaster['masterid'];
-        $rbacMaster = DB::table('rbac_master')->where('masterid','>',$lastId)->get();
-        $sql = 'insert `erp_master` (`masterid`,`user_pic`,`cityid`,`mastername`,`fullname`,`mobile`,`email`,`deptname`,`creatorid`,`status`) values';
-        $data = '';
-        foreach ($rbacMaster as $m) {
-            $user_pic = $m->user_pic?$m->user_pic:'';
-            $data .= "('{$m->masterid}','{$user_pic}','{$m->cityid}','{$m->mastername}','{$m->fullname}','{$m->mobile}','{$m->email}','{$m->deptname}','{$m->creatorid}','{$m->status}'),";
-        }
-        $sql .= trim($data,',');
-        if(!$data){
-            die('已经是最新数据');
-        }
-        if(!isset($_GET['insert'])){
-            echo $sql;die;
-        }else{
-            DB::insert($sql);
-            echo '此次同步:'.count($rbacMaster).'条';die;
         }
     }
 

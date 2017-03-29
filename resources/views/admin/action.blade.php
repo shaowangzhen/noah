@@ -81,12 +81,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="new_url" class="col-sm-2 control-label no-padding-right">New_Url:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="new_url" name="new_url" placeholder="Url">
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label for="orderid" class="col-sm-2 control-label no-padding-right">排序:</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="orderid" name="orderid" placeholder="填写数字,按大到小排序">

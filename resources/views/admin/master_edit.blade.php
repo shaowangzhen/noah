@@ -38,7 +38,8 @@
                 <div class="form-group">
                     <label for="mobile" class="col-sm-2 control-label no-padding-right">手机号:</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control validate" id="mobile" name="mobile" value="{{$master['mobile']}}" validateContent='{ "ValidateTypes":"1,8","Content":[{ "ErrorMsg":"手机号码不能为空"},{ "ErrorMsg":"请输入正确的手机号码"}]}'>
+                        {{--<input type="text" class="form-control validate" id="mobile" name="mobile" value="{{$master['mobile']}}" validateContent='{ "ValidateTypes":"1,8","Content":[{ "ErrorMsg":"手机号码不能为空"},{ "ErrorMsg":"请输入正确的手机号码"}]}'>--}}
+                        <input type="text" class="form-control validate" id="mobile" name="mobile" value="{{$master['mobile']}}">
                     </div>
                 </div>
                 <div class="form-group">

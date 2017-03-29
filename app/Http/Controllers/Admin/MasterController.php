@@ -49,7 +49,6 @@ class MasterController extends BaseController
             } else {
                 return $this->setCode(self::CODE_ERROR)->setMsg($res)->toJson();
             }
-            exit();
         }
         $data_level = NoahMaster::$dataLevel;
         $status = NoahMaster::$status;
@@ -70,7 +69,7 @@ class MasterController extends BaseController
      */
     public function masterEdit(Request $request, $masterid)
     {
-        $erpMaster = NoahMaster::where('masterid', $masterid)->first();
+        $noahMaster = NoahMaster::where('masterid', $masterid)->first();
         if ($request->isMethod('post')) {
             $data = $request->all();
             $res = $this->masterRepo->updateData($data, $masterid);
@@ -83,14 +82,13 @@ class MasterController extends BaseController
                     return $this->setCode(self::CODE_ERROR)->setMsg($res)->toJson();
                 }
             }
-            exit();
         }
         $data_level = NoahMaster::$dataLevel;
         $status = NoahMaster::$status;
         $roles = $this->masterRepo->getRolesWithMaster($masterid);
         $data = [
             'data_level' => $data_level,
-            'master' => $erpMaster,
+            'master' => $noahMaster,
             'roles' => $roles,
             'status' => $status
         ];

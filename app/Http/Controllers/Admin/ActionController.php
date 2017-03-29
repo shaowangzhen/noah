@@ -49,7 +49,6 @@ class ActionController extends BaseController
         $service->actions               = $data['actions'];
         $service->orderid               = $data['orderid'];
         $service->url                   = $data['url'];
-        $service->new_url               = $data['new_url'];
         $service->type                  = $data['type'];
         $service->code                  = $data['code'];
         $service->icon                  = $data['icon'];
