@@ -37,7 +37,6 @@
         <input id="_token" name="_token" type="hidden" value="{{csrf_token()}}" />
         <input id="hasCode" type="hidden" value="" />
         <a href="javascript:;" id="loginBtn" class="login-btn">登录</a>
-        <a href="javascript:;" id="resetBtn" style="background: transparent none repeat scroll 0% 0%; color: rgb(0, 0, 0); margin-top: 0px; height: 20px; width: 70px; float: right; margin-right: 10px;">找回密码</a>
     </form>
 </div>
 <div id="maskLayer" class="fancybox-overlay fancybox-overlay-fixed" style="width: auto; height: auto; display: none;">

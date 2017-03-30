@@ -27,7 +27,11 @@ class MasterRepository extends BaseRepository
         $masterId = isset($master['masterid'])?$master['masterid']:0;
         return $masterId;
     }
-    
+    public function getUserInfoByUserId($userId)
+    {
+        return $this->master->getOne(['*'], ['masterid' => $userId]);
+    }
+
     /**
      * 用户列表
      * @param array $params
@@ -165,25 +169,6 @@ class MasterRepository extends BaseRepository
         return true;
     }
 
-    /**
-     * master数据导入
-     */
-    public function cpMaster()
-    {
-        $rbacMaster = DB::table('rbac_master')->where('masterid','>','0')->get();
-        $sql = 'insert `erp_master` (`masterid`,`user_pic`,`cityid`,`mastername`,`fullname`,`mobile`,`email`,`deptname`,`creatorid`,`status`) values';
-        $data = '';
-        foreach ($rbacMaster as $m) {
-            $user_pic = $m->user_pic?$m->user_pic:'';
-            $data .= "('{$m->masterid}','{$user_pic}','{$m->cityid}','{$m->mastername}','{$m->fullname}','{$m->mobile}','{$m->email}','{$m->deptname}','{$m->creatorid}','{$m->status}'),";
-        }
-        $sql .= trim($data,',');
-        if(!isset($_GET['insert'])){
-            echo $sql;die;
-        }else{
-            DB::insert($sql);
-        }
-    }
 
     public function getAllMaster()
     {

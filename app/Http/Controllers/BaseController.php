@@ -40,6 +40,13 @@ class BaseController extends Controller
         $userId = isset($users['users']['masterid']) ? $users['users']['masterid'] : 0;
         return $userId;
     }
+
+    public function getUserPowerList()
+    {
+        $users = UserRepository::getLoginInfo();
+        return $users['powers'];
+    }
+
     /**
      * 返回json数据
      * @return string

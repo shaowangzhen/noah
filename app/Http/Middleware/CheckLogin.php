@@ -36,6 +36,7 @@ class CheckLogin
     {
         // 验证登录
         $this->userInfo = UserRepository::getLoginInfo();
+
         if (isset($this->userInfo['users']['mastername'])) {
             if (($this->controllerName == 'logincontroller') && ($this->actionName == 'index')) {
                 return redirect('/');
@@ -43,17 +44,6 @@ class CheckLogin
         } else {
             if ($this->controllerName != 'logincontroller') {
                 return redirect('/login');
-            }
-        }
-        // 权限验证
-        $checkResult = UserRepository::checkPower($this->controllerName, $this->actionName, $this->userInfo['powers']);
-        if (!$checkResult) {
-            $msg = "您没有" . $this->controllerName . " " . $this->actionName . "权限";
-            if ($request->ajax()) {
-                $data = ['msg' => $msg,'code' => -401];
-                return response()->json($data);
-            } else {
-                return view('errors.error', ['msg' => $msg,'optype' => 'parent_reload','url' => url()]);
             }
         }
         return $next($request);

@@ -6,8 +6,10 @@
             <small></small>
         </h1>
         <ol class="breadcrumb">
+            @if (isset($powers['mastercontroller']['master']))
             <li><a href="{{url('admin/master')}}"><i class="fa fa-dashboard"></i>用户管理</a></li>
             <li class="active">用户列表</li>
+            @endif()
         </ol>
     </section>
 
@@ -33,7 +35,9 @@
                                             <input type="mobile" class="form-control" name="mobile" id="mobile" value='{{$params['mobile'] or ''}}' />
                                         </div>
                                         <button type="submit" class="btn btn-default">查询</button>
-                                        <a type="button" href="master/add" class="btn btn-default" style="float:right;">添加</a>
+                                        @if (isset($powers['mastercontroller']['masteradd']))
+                                            <a type="button" href="master/add" class="btn btn-default" style="float:right;">添加</a>
+                                        @endif
                                     </form>
                                 </div>
                                 <!-- /.box -->
@@ -56,7 +60,9 @@
                                                 <th> 角色 </th>
                                                 <th> 状态 </th>
                                                 <th> 创建时间 </th>
+                                                @if (isset($powers['mastercontroller']['masteredit']))
                                                 <th> 操作 </th>
+                                                @endif
                                             </tr>
                                             @foreach ($lists as $list)
                                             <tr>
@@ -71,7 +77,9 @@
                                                 </td>
                                                 <td>{{$list['statusname']}}</td>
                                                 <td>{{$list['createtime']}}</td>
+                                                @if (isset($powers['mastercontroller']['masteredit']))
                                                 <td><a href="{{url('admin/master/edit/'.$list['masterid'])}}" class="btn btn-primary btn-xs">修改</a></td>
+                                                @endif
                                             </tr>
                                             @endforeach
                                         </table>

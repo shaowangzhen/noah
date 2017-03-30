@@ -19,6 +19,12 @@ class BaseRepository
         return $userId;
     }
 
+    public function getUserPowerList()
+    {
+        $users = UserRepository::getLoginInfo();
+        return $users['powers'];
+    }
+
     /*
      * @desc 发送邮件
      * @param $mailTitle string 邮件标题

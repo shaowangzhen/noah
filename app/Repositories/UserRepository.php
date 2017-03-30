@@ -147,7 +147,6 @@ class UserRepository extends BaseRepository
     }
 
 
-
     public static function loginStrategy($userInfo)
     {
         $mastername = $userInfo->mastername;
@@ -338,7 +337,7 @@ class UserRepository extends BaseRepository
             // 判断是否需要验证权限
             $checkPower = true;
             // 权限验证例外（不需做权限验证的controller和action）
-            $exceptPower = Config::get('auth.exceptPower');
+            $exceptPower = config('auth.exceptPower');
             if (isset($exceptPower[$controllerName]) && (in_array("*", $exceptPower[$controllerName]) || in_array($actionName, $exceptPower[$controllerName]))) {
                 $checkPower = false;
             }

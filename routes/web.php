@@ -31,8 +31,10 @@ Route::group([
     Route::get('/master', 'MasterController@master');
     Route::match(['get', 'post'], '/master/add', 'MasterController@masterAdd');
     Route::match(['get', 'post'], '/master/edit/{id}', 'MasterController@masterEdit');
-    Route::get('/master/ajaxldapuser', 'MasterController@ajaxLdapUser');
     Route::get('/master/ajaxDBUser', 'MasterController@ajaxDBUser');
+    Route::match(['get', 'post'], '/master/pwdEdit', 'MasterController@masterPwdEdit');
+    Route::match(['get', 'post'], '/master/pwdModify', 'MasterController@masterPwdModify');
+
 
     //角色
     Route::get('/role', 'RoleController@role');
