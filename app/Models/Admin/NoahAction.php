@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
 
+use App\Models\NoahModel;
 
 class NoahAction extends NoahModel
 {
@@ -11,6 +12,6 @@ class NoahAction extends NoahModel
 
     public function roles()
     {
-        return $this->belongsToMany('App\Models\NoahRole', 'noah_role_actions', 'actionid', 'roleid');
+        return $this->belongsToMany('App\Models\Admin\NoahRole', 'noah_role_actions', 'actionid', 'roleid');
     }
 }

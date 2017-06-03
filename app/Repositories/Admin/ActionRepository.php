@@ -1,8 +1,9 @@
 <?php
-namespace App\Repositories;
+namespace App\Repositories\Admin;
 
-use App\Models\NoahAction;
-use App\Models\NoahRoleActions;
+use App\Repositories\BaseRepository;
+use App\Models\Admin\NoahAction;
+use App\Models\Admin\NoahRoleActions;
 
 class ActionRepository extends BaseRepository {
     //定义权限编号初始值

@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller as Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use App\Repositories\UserRepository;
+use App\Repositories\Admin\UserRepository;
 
 class BaseController extends Controller
 {

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Admin;
 
-use App\Models\NoahRole;
-use App\Models\NoahMasterRoles;
-use App\Models\NoahMaster;
+use App\Repositories\BaseRepository;
+use App\Models\Admin\NoahRole;
+use App\Models\Admin\NoahMasterRoles;
+use App\Models\Admin\NoahMaster;
 
 class RoleRepository extends BaseRepository
 {

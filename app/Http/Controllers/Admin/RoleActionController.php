@@ -8,10 +8,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
-use App\Repositories\RoleActionRepository;
-use App\Repositories\ActionRepository;
-use App\Repositories\RoleRepository;
-use App\Repositories\UserRepository;
+use App\Repositories\Admin\RoleActionRepository;
+use App\Repositories\Admin\ActionRepository;
+use App\Repositories\Admin\RoleRepository;
+use App\Repositories\Admin\UserRepository;
 use DB;
 
 class RoleActionController extends BaseController

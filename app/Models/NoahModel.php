@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-use App\Library\Common;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * 通用Model类
- * Class XinModel
  * @package App\Models
  */
 class NoahModel extends Model
@@ -284,19 +282,5 @@ class NoahModel extends Model
         return $result;
     }
 
-    /*
-     * 处理图片地址
-     * @param $pic绝对或相对
-     * @return 绝对地址
-     * */
-    public function dealPic($pic){
-        $sub_str = '';
-        if (preg_match('/^http:[\d\D]*?.com/', $pic)) {
-            $sub_str = preg_replace('/^http:[\d\D]*?.com/', '', $pic);
-        } else {
-            $sub_str = $pic;
-        }
-        return Common::getImgHost().$sub_str;
-    }
 
 }

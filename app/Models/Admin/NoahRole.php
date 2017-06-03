@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
 
-
+use App\Models\NoahModel;
 class NoahRole extends NoahModel
 {
     protected $table = 'noah_role';

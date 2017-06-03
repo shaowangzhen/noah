@@ -8,7 +8,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
-use App\Repositories\ActionRepository;
+use App\Repositories\Admin\ActionRepository;
 
 class ActionController extends BaseController
 {

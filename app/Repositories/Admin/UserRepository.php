@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Admin;
 
-use App\Models\NoahMasterRoles;
-use App\Models\NoahRole;
-use App\Models\NoahResRole;
-use App\Models\NoahMaster;
-use App\Models\NoahRoleActions;
-use App\Models\NoahAction;
+use App\Repositories\BaseRepository;
+use App\Models\Admin\NoahMasterRoles;
+use App\Models\Admin\NoahRole;
+use App\Models\Admin\NoahResRole;
+use App\Models\Admin\NoahMaster;
+use App\Models\Admin\NoahRoleActions;
+use App\Models\Admin\NoahAction;
 use Mockery\CountValidator\Exception;
 use App\Library\RedisCommon;
 use Config;

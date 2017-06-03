@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Routing\Route;
 use Closure;
-use App\Repositories\UserRepository;
+use App\Repositories\Admin\UserRepository;
 
 class CheckLogin
 {
@@ -17,6 +17,7 @@ class CheckLogin
     public function __construct(Route $route)
     {
         $this->route = $route;
+        dd($this->route);
         // 获取当前的controller和action
         $urlStr = $this->route->getActionName();
         $_tmpArr = explode('@', $urlStr);

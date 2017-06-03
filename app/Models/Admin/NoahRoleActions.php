@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
 
+use App\Models\NoahModel;
 
 class NoahRoleActions extends NoahModel
 {

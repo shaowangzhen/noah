@@ -10,7 +10,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\ZebraController;
-use App\Repositories\UserRepository;
+use App\Repositories\Admin\UserRepository;
 use App\Repositories\WhitelistRepository;
 use Illuminate\Http\Request;
 use DB;

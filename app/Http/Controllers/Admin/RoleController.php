@@ -8,9 +8,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
-use App\Models\NoahRole;
-use App\Models\NoahRoleActions;
-use App\Repositories\RoleRepository;
+use App\Models\Admin\NoahRole;
+use App\Models\Admin\NoahRoleActions;
+use App\Repositories\Admin\RoleRepository;
 
 class RoleController extends BaseController
 {
@@ -47,7 +47,7 @@ class RoleController extends BaseController
     public function roleMasters($id)
     {
         $lists = $this->roleRepo->getMastersByroleid($id);
-        $status = \App\Models\NoahMaster::$status;
+        $status = \App\Models\Admin\NoahMaster::$status;
         $data = ['lists'=>$lists,'status'=>$status];
         return view('admin.role_masters',$data);
     }

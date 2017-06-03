@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
-use App\Models\NoahMaster;
-use App\Models\NoahMasterRoles;
-use App\Models\NoahRole;
-use App\Repositories\UserRepository;
-use App\Repositories\MasterRepository;
+use App\Models\Admin\NoahMaster;
+use App\Models\Admin\NoahMasterRoles;
+use App\Models\Admin\NoahRole;
+use App\Repositories\Admin\UserRepository;
+use App\Repositories\Admin\MasterRepository;
 
 class MasterController extends BaseController
 {

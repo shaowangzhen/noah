@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
+
+use App\Models\NoahModel;
 
 class NoahMaster extends NoahModel
 {
@@ -12,6 +14,6 @@ class NoahMaster extends NoahModel
 
     public function roles()
     {
-        return $this->belongsToMany('App\Models\NoahRole', 'noah_master_roles', 'masterid', 'roleid');
+        return $this->belongsToMany('App\Models\Admin\NoahRole', 'noah_master_roles', 'masterid', 'roleid');
     }
 }
