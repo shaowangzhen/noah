@@ -15,10 +15,10 @@ class BaseController extends Controller
 
 
     const CODE_SUCCESS = 1;//成功
-    const CODE_ERROR = 0;//失败
+    const CODE_ERROR = -1;//失败
     const CODE_UPDATE = 2;
-
     const CODE_NOAUTH = -401;
+
     protected $result = [
         'code' => self::CODE_ERROR,
         'msg' => '',

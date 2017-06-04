@@ -44,7 +44,7 @@
         <div class="fancybox-skin" style="padding: 15px; width: auto; height: auto;">
             <div class="fancybox-outer">
                 <div class="fancybox-inner" style="overflow: auto; width: 600px; height: 350px;">
-                    <iframe id="fancybox-frame1461914177253" name="fancybox-frame1461914177253" width="600" height="600" class="fancybox-iframe" frameborder="0" vspace="0" hspace="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" scrolling="auto" src="/login/resetpassword"></iframe>
+                    {{--<iframe id="fancybox-frame1461914177253" name="fancybox-frame1461914177253" width="600" height="600" class="fancybox-iframe" frameborder="0" vspace="0" hspace="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" scrolling="auto" src="/login/resetpassword"></iframe>--}}
                 </div>
             </div>
             <a id="closeBtn" class="fancybox-item fancybox-close" href="javascript:;"></a>

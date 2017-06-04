@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Admin\UserRepository;
-use App\Models\Admin\NoahMaster;
+use App\Models\Admin\NoahUser;
 use App\Library\Common;
 use Illuminate\Http\Request;
 use DB;

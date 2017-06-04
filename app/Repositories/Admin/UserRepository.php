@@ -3,14 +3,12 @@
 namespace App\Repositories\Admin;
 
 use App\Repositories\BaseRepository;
-use App\Models\Admin\NoahMasterRoles;
+use App\Models\Admin\NoahUserRole;
 use App\Models\Admin\NoahRole;
-use App\Models\Admin\NoahResRole;
-use App\Models\Admin\NoahMaster;
-use App\Models\Admin\NoahRoleActions;
+use App\Models\Admin\NoahUser;
+use App\Models\Admin\NoahRoleAction;
 use App\Models\Admin\NoahAction;
 use Mockery\CountValidator\Exception;
-use App\Library\RedisCommon;
 use Config;
 use DB;
 
@@ -46,104 +44,62 @@ class UserRepository extends BaseRepository
         return $resArr;
     }
 
-    static public function getDBUser($mastername, $pwd = '') {
-        $selectCols = [
-            'mastername',
-            'fullname',
-            'mobile',
-            'email',
-            'deptname',
-            'password',
-            'status'
-        ];
-        $dbUser = DB::table('noah_master')
-            ->select($selectCols)
-            ->where('mastername', '=', sprintf("%s", $mastername))
-            ->where('mastername',  $mastername)
-            ->orderBy('status','desc')
-            ->orderBy('masterid','desc')
-            ->first();
-        if(is_null($dbUser)) {
-            $dbUser = false;
-        } else {
-            $dbUser->password = base64_decode($dbUser->password);
-            //验证密码是否正确
-            if(password_verify(trim($pwd), $dbUser->password)) {
-                switch ($dbUser->status) {
-                    case -1:
-                        $dbUser = ['code' => -1,'msg' => '该用户已被删除！'];
-                        break;
-                    case 0:
-                        $dbUser = ['code' => -1,'msg' => '该用户已被禁用！'];
-                        break;
-                    case 1:
-                        unset($dbUser->password);
-                        unset($dbUser->status);
-                        $dbUser = json_decode(json_encode($dbUser), true);
-                        break;
-                }
-            } else {
-                $dbUser = false;
-            }
-        }
-        return $dbUser;
-    }
-
     /**
      * 验证登录信息
      * @param string $mastername
      * @param string $pwd
-     * @return true/false
      */
-    static public function checkLogin($mastername, $pwd, $code = '', $checkCode = false, $errortimes = 10)
+    public static function checkLogin($userName, $pwd)
     {
         try {
-            $result = self::getDBUser($mastername, $pwd);
-            //禁止登录的用户
-            if(isset($result['code'])) {
-                return $result;
-            }
-            // 验证是否为系统的用户，构造基本信息和权限等信息，保存至session
-            $data = [
-                'users' => '',
-                'roles' => '',
-                'action_ids' => '',
-                'powers' => ''
+            $noahUserModel = new NoahUser();
+            $selectCols = [
+                'id',
+                'user_name',
+                'password',
+                'status',
+                'this_login_time',
             ];
-            $userInfo = NoahMaster::where('mastername', $mastername)->where('status', '1')->first();
-            if (!$userInfo) {
-                return ['code' => -1,'msg' => '抱歉，您不是系统用户！'];
-            }else if ($result === false) {
-                return ['code' => -1,'msg' => '用户名或密码错误！'];
-            }else{
-                $userInfo->lastlogintime = $userInfo->thislogintime;
-                $userInfo->thislogintime = date('Y-m-d H:i:s');
-                $userInfo->save();
+            $dbUserData = $noahUserModel->getOne($selectCols,['user_name' => sprintf("%s", $userName), 'in' => ['status' => [0,1]]]);
+            if (empty($dbUserData)) {
+                return ['code' => -1, 'msg' => '该用户不存在'];
+            } else {
+                if (password_verify(trim($pwd), base64_decode($dbUserData['password']))) {
+                    if ($dbUserData['status'] == 0) {
+                        return ['code' => 0, 'msg' => '该用户已被禁用'];
+                    } elseif ($dbUserData['status'] == 1) {
+                        $updatedLoginData['last_login_time'] = $dbUserData['this_login_time'];
+                        $updatedLoginData['this_login_time'] = date('Y-m-d H:i:s');
+                        $noahUserModel->updateBy($updatedLoginData, ['id'=>$dbUserData['id']]);
+
+                        // 构造用户 基本信息和权限等信息，保存至session
+                        $sessionData = [
+                            'user_info' => '',
+                            'role_id_list' => '',
+                            'action_id_list' => '',
+                            'power_list' => ''
+                        ];
+                        // 用户基本信息
+                        $sessionData['user_info'] = $dbUserData;
+                        // 角色信息
+                        $sessionData['role_id_list'] = array_keys(self::getRoleList($dbUserData['id']))?:[];
+                        // action列表
+                        $actionList = self::getActionList($sessionData['role_id_list'])?:[];
+                        $sessionData['action_id_list'] = array_keys($actionList);
+                        // 权限列表
+                        $sessionData['power_list'] = self::getPowerList($actionList);
+                        if (empty($sessionData['power_list'])) {
+                            return ['code' => 2,'msg' => '抱歉，您没有系统权限！'];
+                        }
+                        session(['user_session_info' => $sessionData]);
+                        return ['code' => 1,'msg' => '成功'];
+                    }
+                } else {
+                    return ['code' => -2, 'msg' => '密码错误'];
+                }
             }
-            $userInfo = $userInfo->toArray();
-            // 构造用户基本信息
-            $data['users'] = $userInfo;
-            $masterid = $userInfo['masterid'];
-            // 角色信息
-            $data['roles'] = array_keys(self::getRoleList($masterid));
-            $roleIds = $data['roles']?$data['roles']:[];
-            // action列表
-            $actionList = self::getActionList($roleIds);
-            $data['action_ids'] = array_keys($actionList);
-            foreach ($actionList as $k => $actionInfo)
-            {
-                $actionList[$k]['controller'] = strtolower($actionInfo['controller']);
-                $actionList[$k]['actions'] = strtolower($actionInfo['actions']);
-            }
-            // 权限列表
-            $data['powers'] = self::getPowerList($actionList);
-            if(empty($data['powers'])){
-                return ['code' => -1,'msg' => '抱歉，您没有系统权限！'];
-            }
-            session(['userInfo' => $data]);
-            return ['code' => 1,'msg' => '成功'];
         } catch (\Exception $e) {
-            throw $e;
+            dd($e->getMessage());
         }
     }
 
@@ -166,19 +122,22 @@ class UserRepository extends BaseRepository
         }
     }
 
-    // 已有角色列表
-    public static function getRoleList($masterid)
+    // 单个user 拥有的角色列表
+    public static function getRoleList($userId)
     {
-        $roleIds = NoahMasterRoles::where('masterid',$masterid)->pluck('roleid')->all();
-        $lists = NoahRole::whereIn('roleid', $roleIds)->where('status', 1)->get();
-        $data = [];
-        if (! empty($lists)) {
-            foreach ($lists as $v) {
-                $data[$v->roleid] = $v->name;
+        $result = [];
+        if ($userId) {
+            $roleIdArr = (new NoahUserRole())->getAll(['id'],['user_id' => $userId]);
+            if (!empty($roleIdArr)) {
+                $roleDataArr = (new NoahRole())->getAll(['id','role_name'], ['in' => ['id' => $roleIdArr], 'status' => 1]);
+                if (!empty($roleDataArr)) {
+                    foreach ($roleDataArr as $singleRoleData) {
+                        $result[$singleRoleData['id']] = $singleRoleData['role_name'];
+                    }
+                }
             }
         }
-
-        return $data;
+        return $result;
     }
 
     // 所有角色列表
@@ -195,18 +154,19 @@ class UserRepository extends BaseRepository
     }
 
     // action列表
-    private static function getActionList($roleIds)
+    private static function getActionList($roleIdArr)
     {
         try {
-            $result = $actionList = array();
-            if (empty($roleIds)) {
-                return $result;
-            }
-            // 根据roleid，关联erp_role_actions和erp_action，获取roleid对应的actions
-            $actionIds = NoahRoleActions::whereIn('roleid',$roleIds)->pluck('actionid')->all();
-            $actionList = NoahAction::whereIn('actionid',$actionIds)->where('status',1)->orderBy('orderid','asc')->get()->toArray();
-            foreach ($actionList as $v) {
-                $result[$v['actionid']] = $v;
+            $result = [];
+            if (!empty($roleIdArr)) {
+                // 根据roleids，关联noah_role_action和noah_action，获取roleid对应的actions
+                $actionIdArr = (new NoahRoleAction())->getAll(['action_id'], ['in' => ['role_id'=>$roleIdArr]]);
+                $actionList = (new NoahAction())->getAll(['*'], ['status' => 1, 'in' => ['id' => $actionIdArr]], ['order_id' => 'asc']);
+                if (!empty($actionList)) {
+                    foreach ($actionList as $singleAction) {
+                        $result[$singleAction['id']] = $singleAction;
+                    }
+                }
             }
             return $result;
         } catch (\Exception $e) {
@@ -217,7 +177,7 @@ class UserRepository extends BaseRepository
     //  所有权限
     public static function getActionsLists()
     {
-        return NoahAction::select('actionid')->get()->toarray();
+        return (new NoahAction())->getAll(['id']);
     }
 
     // 权限列表(controller和action都小写)
@@ -229,22 +189,20 @@ class UserRepository extends BaseRepository
                 foreach ($actionList as $actionInfo) {
                     // 根据controller和action，构造权限数据结构
                     if ($actionInfo['controller']) {
+                        $controller = strtolower(trim($actionInfo['controller']));
                         $actions = explode(',', $actionInfo['actions']);
-                        foreach ((array) $actions as $_action) {
-                            if (! empty($_action)) {
-                                $_controller = strtolower(trim($actionInfo['controller']));
-                                $_action = strtolower(trim($_action));
-                                $powerList[$_controller][$_action] = $_action;
+                        foreach ($actions as $singleAction) {
+                            if (!empty($singleAction)) {
+                                $singleAction = strtolower(trim($singleAction));
+                                $powerList[$controller][$singleAction] = $singleAction;
                             }
                         }
                     }
                 }
-                return $powerList;
-            } else {
-                return [];
             }
+            return $powerList;
         } catch (\Exception $e) {
-            throw $e;
+            dd($e->getMessage());
         }
     }
 
@@ -269,14 +227,14 @@ class UserRepository extends BaseRepository
                     // 根据type，构造menus数据结构（type=1是顶级菜单，type=2是点击可打开页面的菜单）
                     if ($v['type'] == 1 || $v['type'] == 2) {
                         // 仅使用登录用户信息中存在的action
-                        if (in_array($v['actionid'], $actionIds)) {
+                        if (in_array($v['id'], $actionIds)) {
                             // 构造菜单的基本信息
-                            $menuList[$v['actionid']]['name'] = $v['actionname'];
-                            $menuList[$v['actionid']]['actionid'] = $v['actionid'];
-                            $menuList[$v['actionid']]['parent_actionid'] = $v['parent_actionid'];
+                            $menuList[$v['id']]['action_name'] = $v['action_name'];
+                            $menuList[$v['id']]['id'] = $v['id'];
+                            $menuList[$v['id']]['pid'] = $v['pid'];
                             // 构造页面url、showtype、icon
-                            $menuList[$v['actionid']]['url'] = $v['url'];
-                            $menuList[$v['actionid']]['icon'] = $v['icon'];
+                            $menuList[$v['id']]['url'] = $v['url'];
+                            $menuList[$v['id']]['icon'] = $v['icon'];
                         }
                     }
                 }
@@ -295,8 +253,8 @@ class UserRepository extends BaseRepository
         if ($data) {
             foreach ((array) $data as $k => $v) {
                 // 父亲找到儿子
-                if ($v['parent_actionid'] == $parent_actionid) {
-                    $v['child'] = self::getMenuTree($data, $v['actionid']);
+                if ($v['pid'] == $parent_actionid) {
+                    $v['child'] = self::getMenuTree($data, $v['id']);
                     $menuTree[] = $v;
                 }
             }
@@ -307,11 +265,11 @@ class UserRepository extends BaseRepository
     /**
      * 获取用户sesion信息
      */
-    static public function getLoginInfo()
+    public static function getLoginInfo()
     {
         $userInfo = [];
         try {
-            $userSessionData = session('userInfo');
+            $userSessionData = session('user_session_info');
             if ($userSessionData) {
                 $userInfo = $userSessionData;
             }

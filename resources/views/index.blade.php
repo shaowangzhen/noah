@@ -46,7 +46,7 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a><span>您好！{{session('userInfo')['users']['fullname']}}</span></a>
+                        <a><span>您好！{{session('session_user_info')['user_info']['real_name']}}</span></a>
                     </li>
                     <li>
                         <a><span class="span_showdata"></span></a>
@@ -73,13 +73,13 @@
                     <li class="treeview">
                         <a href="#">
                             <i class="fa {{!empty($menu['icon'])?$menu['icon']:'fa-circle-o'}}"></i>
-                            <span>{{$menu['name']}}</span>
+                            <span>{{$menu['action_name']}}</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
                             @foreach($menu['child'] as $child)
                                 <li><a href="#" url="{{$child['url']}}"><i
-                                                class="fa fa-circle-o"></i> {{$child['name']}}</a></li>
+                                                class="fa fa-circle-o"></i> {{$child['action_name']}}</a></li>
                             @endforeach
                         </ul>
                     </li>

@@ -1,4 +1,7 @@
 <?php
+
+Route::post('/test/test', 'TestController@test');
+Route::get('/test/test', 'TestController@test');
 Route::get('/', [
     'middleware' => 'checkLogin',
     'uses' => 'HomeController@index'

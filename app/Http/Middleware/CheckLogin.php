@@ -17,13 +17,11 @@ class CheckLogin
     public function __construct(Route $route)
     {
         $this->route = $route;
-        dd($this->route);
-        // 获取当前的controller和action
         $urlStr = $this->route->getActionName();
-        $_tmpArr = explode('@', $urlStr);
-        $this->actionName = strtolower(end($_tmpArr));
-        $_tmpArr = explode('\\', $_tmpArr[0]);
-        $this->controllerName = strtolower(end($_tmpArr));
+        $tmpArr = explode('@', $urlStr);
+        $this->actionName = strtolower(end($tmpArr));
+        $tmpArr = explode('\\', $tmpArr[0]);
+        $this->controllerName = strtolower(end($tmpArr));
     }
 
     /**
@@ -35,10 +33,8 @@ class CheckLogin
      */
     public function handle($request, Closure $next)
     {
-        // 验证登录
         $this->userInfo = UserRepository::getLoginInfo();
-
-        if (isset($this->userInfo['users']['mastername'])) {
+        if (isset($this->userInfo['user_info']['user_name'])) {
             if (($this->controllerName == 'logincontroller') && ($this->actionName == 'index')) {
                 return redirect('/');
             }

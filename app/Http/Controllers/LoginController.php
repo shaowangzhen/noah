@@ -18,20 +18,25 @@ class LoginController extends BaseController
 
     public function check(Request $request)
     {
-        $username = $request->input('username');
+        $userName = $request->input('username');
         $pwd = $request->input('password');
-        if (!$username || !$pwd) {
+        if (!$userName || !$pwd) {
             return $this->setCode(self::CODE_ERROR)->setMsg('用户名或密码不能为空!')->toJson();
         }
-        // 登录验证
-        $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $request->getClientIp();
-        $res = UserRepository::checkLogin($username, $pwd, '', false); //暂不开启短信验证
-        if ($res['code'] == 1) {
+
+        $res = UserRepository::checkLogin($userName, $pwd);
+
+        if ($res['code'] == 0) {
+            return $this->setCode(self::CODE_ERROR)->setMsg('该用户已被禁用')->toJson();
+        } elseif ($res['code'] == 1) {
             return $this->setCode(self::CODE_SUCCESS)->setMsg('登录成功!')->toJson();
-        } elseif(isset($res['code'])) {
-            return $this->setCode($res['code'])->setMsg($res['msg'])->setData($ip)->toJson();
+        } elseif($res['code'] == 2) {
+            return $this->setCode(self::CODE_ERROR)->setMsg('抱歉，您没有系统权限')->toJson();
+        } elseif ($res['code'] == -1) {
+            return $this->setCode(self::CODE_ERROR)->setMsg('该用户不存在！')->toJson();
+        } elseif ($res['code'] == -2) {
+            return $this->setCode(self::CODE_ERROR)->setMsg('用户名或密码错误！')->toJson();
         }
-        return $this->setCode(self::CODE_ERROR)->setMsg('用户名或密码错误！')->toJson();
     }
 
     public function logout()
