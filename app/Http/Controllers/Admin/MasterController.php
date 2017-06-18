@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
-use App\Models\Admin\NoahMaster;
-use App\Models\Admin\NoahMasterRoles;
+use App\Models\Admin\NoahUser;
+use App\Models\Admin\NoahUserRole;
 use App\Models\Admin\NoahRole;
 use App\Repositories\Admin\UserRepository;
 use App\Repositories\Admin\MasterRepository;
@@ -55,8 +55,8 @@ class MasterController extends BaseController
                 return $this->setCode(self::CODE_ERROR)->setMsg($res)->toJson();
             }
         }
-        $data_level = NoahMaster::$dataLevel;
-        $status = NoahMaster::$status;
+        $data_level = NoahUser::$dataLevel;
+        $status = NoahUser::$status;
         $roles = $this->masterRepo->getRolesWithMaster();
         $data = [
             'data_level' => $data_level,
@@ -74,7 +74,7 @@ class MasterController extends BaseController
      */
     public function masterEdit(Request $request, $masterid)
     {
-        $noahMaster = NoahMaster::where('masterid', $masterid)->first();
+        $noahMaster = NoahUser::where('masterid', $masterid)->first();
         if ($request->isMethod('post')) {
             $data = $request->all();
             $res = $this->masterRepo->updateData($data, $masterid);
@@ -88,8 +88,8 @@ class MasterController extends BaseController
                 }
             }
         }
-        $data_level = NoahMaster::$dataLevel;
-        $status = NoahMaster::$status;
+        $data_level = NoahUser::$dataLevel;
+        $status = NoahUser::$status;
         $roles = $this->masterRepo->getRolesWithMaster($masterid);
         $data = [
             'data_level' => $data_level,
@@ -144,7 +144,7 @@ class MasterController extends BaseController
             return $this->setCode(self::CODE_ERROR)->setMsg('旧密码输入错误！')->toJson();
         }
         $savePwd = UserRepository::makePassword(trim($newPwd));
-        (new NoahMaster())->updateBy(['password'=> $savePwd], ['masterid'=>$masterId]);
+        (new NoahUser())->updateBy(['password'=> $savePwd], ['masterid'=>$masterId]);
         return $this->setCode(self::CODE_SUCCESS)->setMsg('编辑成功')->toJson();
 
 //        return $this->setCode(self::CODE_SUCCESS)->setMsg('密码修改成功.')->toJson();

@@ -23,7 +23,7 @@ class RoleRepository extends BaseRepository
         if (!empty($params['name'])) {
             $where['name'] = trim($params['name']);
         }
-        $orderBy = ['roleid' => 'desc'];
+        $orderBy = ['role_id' => 'desc'];
         $data = $this->role->getList('*', $where, $orderBy);
 
         return $data;
@@ -37,7 +37,7 @@ class RoleRepository extends BaseRepository
     static public function getInfo($id)
     {
         return OpRole::where([
-                    'roleid' => $id
+                    'role_id' => $id
                 ])->first();
     }
 
@@ -48,7 +48,7 @@ class RoleRepository extends BaseRepository
     public function checkRoleName($role_name, $roleid = 0)
     {
         $where = $roleid > 0 ? "name = '" . $role_name . "' and roleid<>$roleid" : "name = '" . $role_name . "'";
-        return $this->role->whereRaw($where)->select('roleid')->get()->toArray();
+        return $this->role->whereRaw($where)->select('role_id')->get()->toArray();
     }
 
     /**
@@ -70,7 +70,7 @@ class RoleRepository extends BaseRepository
      */
     public function editData($id, $data)
     {
-        return $this->role->where('roleid', $id)->update($data);
+        return $this->role->where('role_id', $id)->update($data);
     }
 
     /**
@@ -80,7 +80,7 @@ class RoleRepository extends BaseRepository
      */
     public function deleteData($id)
     {
-        return $this->role->where('roleid', $id)->delete();
+        return $this->role->where('role_id', $id)->delete();
     }
 
     /**
@@ -89,8 +89,8 @@ class RoleRepository extends BaseRepository
      */
     public function getMastersByroleid($roleid)
     {
-        $masterids = NoahMasterRoles::where('roleid',$roleid)->pluck('masterid')->toArray();
-        $masters = NoahMaster::whereIn('masterid',$masterids)->orderBy('masterid','desc')->get()->toArray();
+        $masterids = NoahMasterRoles::where('role_id',$roleid)->pluck('masterid')->toArray();
+        $masters = NoahUser::whereIn('masterid',$masterids)->orderBy('masterid','desc')->get()->toArray();
 
         return $masters;
     }

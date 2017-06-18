@@ -74,7 +74,7 @@
                         @foreach($roles as $role)
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name='roleids[]' value="{{$role['roleid']}}">{{$role['rolename']}}
+                                <input type="checkbox" name='roleids[]' value="{{$role['role_id']}}">{{$role['rolename']}}
                             </label>
                         </div>
                         @endforeach

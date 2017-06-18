@@ -14,10 +14,10 @@ class MainController extends BaseController {
     //首页默认展示信息
     public function main()
     {
-        $masterid = $this->getUserId();
-        $user = NoahMaster::where('masterid',$masterid)->first()->toArray();
-        $roleids = UserRepository::getUserRoleIdsByMasterId($masterid);
-        $roles = UserRepository::getRoleByRoleids($roleids, ['name']);
+        $userId = $this->getUserId();
+        $user = NoahUser::where('id',$userId)->first()->toArray();
+        $roleids = UserRepository::getUserRoleIdsByMasterId($userId);
+        $roles = UserRepository::getRoleByRoleids($roleids, ['role_name']);
         $data = [
             'user' => $user,
             'roles' => $roles
@@ -29,10 +29,10 @@ class MainController extends BaseController {
     //用户编辑手机号
     public function editMobile(Request $request)
     {
-        $masterid = $this->getUserId();
+        $userId = $this->getUserId();
         $mobile = $request->input('mobile');
         if(Common::isMobile($mobile)){
-            $master = NoahMaster::where('masterid',$masterid)->first();
+            $master = NoahUser::where('id',$userId)->first();
             $master->mobile = $mobile;
             $master->save();
             return $this->setCode(self::CODE_SUCCESS)->setMsg('修改成功')->toJson();

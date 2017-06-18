@@ -37,7 +37,7 @@ class BaseController extends Controller
     public function getUserId()
     {
         $users = UserRepository::getLoginInfo();
-        $userId = isset($users['users']['masterid']) ? $users['users']['masterid'] : 0;
+        $userId = isset($users['user_info']['id']) ? $users['user_info']['id'] : 0;
         return $userId;
     }
 

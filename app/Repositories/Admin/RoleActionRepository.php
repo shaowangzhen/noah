@@ -24,7 +24,7 @@ class RoleActionRepository extends BaseRepository
      */
     public function getActionsList($roleId)
     {
-        return $this->roleActions->where(['roleid' => $roleId])->get();
+        return $this->roleActions->where(['role_id' => $roleId])->get();
     }
 
     /**
@@ -53,7 +53,7 @@ class RoleActionRepository extends BaseRepository
      */
     public function deleteData($roleid, $actionid)
     {
-        return $this->roleActions->where('roleid', $roleid)->where('actionid', $actionid)->delete();
+        return $this->roleActions->where('role_id', $roleid)->where('actionid', $actionid)->delete();
     }
 
     /**
@@ -63,7 +63,7 @@ class RoleActionRepository extends BaseRepository
      */
     public function deleteRoleData($roleid)
     {
-        return $this->roleActions->where('roleid', $roleid)->delete();
+        return $this->roleActions->where('role_id', $roleid)->delete();
     }
 
     /**
@@ -89,12 +89,12 @@ class RoleActionRepository extends BaseRepository
         if($add_citys){
             $insert_data = [];
             foreach($add_citys as $cityid){
-                $insert_data[] = ['restype'=>'city','resid'=>$cityid,'roleid'=>$roleid];
+                $insert_data[] = ['restype'=>'city','resid'=>$cityid,'role_id'=>$roleid];
             }
             $flag = OpResRole::insert($insert_data);
         }
         if($del_citys){
-            $flag && $flag = OpResRole::whereIn('resid',$del_citys)->where(['roleid'=>$roleid,'restype'=>'city'])->delete();
+            $flag && $flag = OpResRole::whereIn('resid',$del_citys)->where(['role_id'=>$roleid,'restype'=>'city'])->delete();
         }
         if(!$flag){
             DB::rollback();

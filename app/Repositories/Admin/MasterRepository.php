@@ -4,7 +4,7 @@ namespace App\Repositories\Admin;
 
 use App\Repositories\BaseRepository;
 use DB;
-use App\Models\Admin\NoahMaster;
+use App\Models\Admin\NoahUser;
 use App\Models\Admin\NoahMasterRoles;
 
 class MasterRepository extends BaseRepository
@@ -12,7 +12,7 @@ class MasterRepository extends BaseRepository
 
     protected $master;
 
-    public function __construct(NoahMaster $master)
+    public function __construct(NoahUser $master)
     {
         $this->master = $master;
     }
@@ -50,7 +50,7 @@ class MasterRepository extends BaseRepository
         }
         $orderBy = ['masterid' => 'desc'];
         $lists = $this->master->getList('*', $where, $orderBy);
-        $status = NoahMaster::$status;
+        $status = NoahUser::$status;
         foreach($lists as $k=>$list){
             $lists[$k]['statusname'] = $status[$list['status']];
         }
@@ -68,7 +68,7 @@ class MasterRepository extends BaseRepository
         $data = [];
         foreach($allRoles as $roleid=>$rolename){
             $checked = array_key_exists($roleid,$roles)?true:false;
-            $data[] = ['roleid'=>$roleid,'rolename'=>$rolename,'checked'=>$checked];
+            $data[] = ['role_id'=>$roleid,'rolename'=>$rolename,'checked'=>$checked];
         }
         return $data;
     }
@@ -83,7 +83,7 @@ class MasterRepository extends BaseRepository
     {
         $user = $this->getUserInfo();
         $userId = $user['users']['masterid'];
-        $noahMaster = new NoahMaster;
+        $noahMaster = new NoahUser;
         //查找是否已经存在
         $useOld = $noahMaster->getOne('masterid',['in'=>['status'=>[0,1]],'mastername'=>$data['mastername']]);
         if(!empty($useOld)){
@@ -111,7 +111,7 @@ class MasterRepository extends BaseRepository
         if($flag && $roleIds){
             $insert_data = [];
             foreach($roleIds as $id){
-                $insert_data[] = ['masterid'=>$masterid,'roleid'=>$id,'creatorid'=>$userId];
+                $insert_data[] = ['masterid'=>$masterid,'role_id'=>$id,'creatorid'=>$userId];
             }
             $flag = NoahMasterRoles::insert($insert_data);
         }
@@ -132,7 +132,7 @@ class MasterRepository extends BaseRepository
     {
         $user = $this->getUserInfo();
         $userId = $user['users']['masterid'];
-        $noahMaster = NoahMaster::find($masterid);
+        $noahMaster = NoahUser::find($masterid);
         $noahMaster->fullname = $data['fullname'];
         $noahMaster->mobile = $data['mobile'];
         $noahMaster->email = $data['email'];
@@ -155,12 +155,12 @@ class MasterRepository extends BaseRepository
         if($flag && $addIds){
             $insert_data = [];
             foreach($addIds as $id){
-                $insert_data[] = ['masterid'=>$masterid,'roleid'=>$id,'creatorid'=>$userId];
+                $insert_data[] = ['masterid'=>$masterid,'role_id'=>$id,'creatorid'=>$userId];
             }
             $flag = NoahMasterRoles::insert($insert_data);
         }
         if($flag && $delIds){
-            $flag = NoahMasterRoles::whereIn('roleid',$delIds)->where('masterid',$masterid)->delete();
+            $flag = NoahMasterRoles::whereIn('role_id',$delIds)->where('masterid',$masterid)->delete();
         }
         if(!$flag){
             DB::rollback();

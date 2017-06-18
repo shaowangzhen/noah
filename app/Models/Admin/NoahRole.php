@@ -12,7 +12,7 @@ class NoahRole extends NoahModel
 
     public function master()
     {
-        return $this->belongsToMany('App\Models\NoahMaster', 'noah_master_role', 'user_id', 'role_id');
+        return $this->belongsToMany('App\Models\NoahUser', 'noah_master_role', 'user_id', 'role_id');
     }
 
 }

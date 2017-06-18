@@ -77,9 +77,9 @@
                         <div class="checkbox">
                             <label>
                                 @if($role['checked'])
-                                <input type="checkbox" name='roleids[]' value="{{$role['roleid']}}" checked>{{$role['rolename']}}
+                                <input type="checkbox" name='roleids[]' value="{{$role['role_id']}}" checked>{{$role['rolename']}}
                                 @else
-                                <input type="checkbox" name='roleids[]' value="{{$role['roleid']}}">{{$role['rolename']}}
+                                <input type="checkbox" name='roleids[]' value="{{$role['role_id']}}">{{$role['rolename']}}
                                 @endif
                             </label>
                         </div>

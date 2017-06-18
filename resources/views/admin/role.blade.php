@@ -54,16 +54,16 @@
                                             </tr>
                                             @foreach ($lists as $list)
                                             <tr>
-                                                <td>{{$list['roleid']}}</td>
+                                                <td>{{$list['role_id']}}</td>
                                                 <td>{{$list['name']}}</td>
                                                 <td>{{$list['content']}}</td>
                                                 <td>{{$status[$list['status']]}}</td>
                                                 <td>{{$list['createtime']}}</td>
                                                 <td>
-                                                    <a url="{{url('admin/role/masters/'.$list['roleid'])}}" class="btn btn-primary btn-xs rm_btn">用户</a>
-                                                    <a class="btn btn-primary btn-xs role_btn" data-id='{{$list['roleid']}}' data-name='{{$list['name']}}' data-content='{{$list['content']}}' data-status='{{$list['status']}}'>编辑</a>
-                                                    <a href="{{url('admin/roleaction/set/'.$list['roleid'])}}" class="btn btn-primary btn-xs">权限分配</a>
-                                                    <a class="btn btn-danger btn-xs" onclick="disp_confirm({{$list['roleid']}})">删除</a>
+                                                    <a url="{{url('admin/role/masters/'.$list['role_id'])}}" class="btn btn-primary btn-xs rm_btn">用户</a>
+                                                    <a class="btn btn-primary btn-xs role_btn" data-id='{{$list['role_id']}}' data-name='{{$list['name']}}' data-content='{{$list['content']}}' data-status='{{$list['status']}}'>编辑</a>
+                                                    <a href="{{url('admin/roleaction/set/'.$list['role_id'])}}" class="btn btn-primary btn-xs">权限分配</a>
+                                                    <a class="btn btn-danger btn-xs" onclick="disp_confirm({{$list['role_id']}})">删除</a>
                                                 </td>
                                             </tr>
                                             @endforeach

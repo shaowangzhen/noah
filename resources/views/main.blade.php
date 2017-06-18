@@ -23,15 +23,15 @@
                     <table class="table table-bordered table-striped">
                         <tr>
                             <td width="20%" class='text-right '>上次登录时间:</td>
-                            <td width="80%">{{$user['lastlogintime']}}</td>
+                            <td width="80%">{{$user['last_login_time']}}</td>
                         </tr>
                         <tr>
                             <td class='text-right '>用户名:</td>
-                            <td>{{$user['mastername']}}</td>
+                            <td>{{$user['user_name']}}</td>
                         </tr>
                         <tr>
                             <td class='text-right '>姓名:</td>
-                            <td>{{$user['fullname']}}</td>
+                            <td>{{$user['real_name']}}</td>
                         </tr>
                         <tr>
                             <td class='text-right '>手机号:</td>
@@ -54,14 +54,14 @@
 
                         <tr>
                             <td class='text-right '>所属部门:</td>
-                            <td>{{$user['deptname']}}</td>
+                            <td>{{$user['dept_name']}}</td>
                         </tr>
 
                         <tr>
                             <td class='text-right '>角色:</td>
                             <td>
                                 @forelse($roles as $role)
-                                    {{$role['name']}}
+                                    {{$role['role_name']}}
                                 @empty
                                     无
                                 @endforelse

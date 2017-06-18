@@ -323,7 +323,7 @@ class UserRepository extends BaseRepository
      */
     static public function getUserRoleIdsByMasterId($masterid)
     {
-        $userRoleIdsArr= NoahMasterRoles::where('masterid',$masterid)->pluck('roleid')->all();
+        $userRoleIdsArr= NoahUserRole::where('id',$masterid)->pluck('role_id')->all();
         return $userRoleIdsArr;
 
 
@@ -339,7 +339,7 @@ class UserRepository extends BaseRepository
 
         $roleids  = is_array($roleids) ? $roleids :explode(',',$roleids);
 
-        $resRoleList = NoahResRole::select($columns)->whereIn('roleid',$roleids)->get();
+        $resRoleList = NoahResRole::select($columns)->whereIn('role_id',$roleids)->get();
         $resRoleList = $resRoleList ? $resRoleList->toArray():[];
         return $resRoleList;
 
@@ -357,7 +357,7 @@ class UserRepository extends BaseRepository
 
         $roleids  = is_array($roleids) ? $roleids :explode(',',$roleids);
 
-        $RoleList = NoahRole::select($columns)->whereIn('roleid',$roleids)->where('status','1')->get();
+        $RoleList = NoahRole::select($columns)->whereIn('id',$roleids)->where('status','1')->get();
         $RoleList = $RoleList ? $RoleList->toArray():[];
         return $RoleList;
 
@@ -375,7 +375,7 @@ class UserRepository extends BaseRepository
 
         $roleIds = is_array($roleids) ? $roleids : explode(',', $roleids);
 
-        $resRoleList = NoahResRole::whereIn('roleid', $roleIds)->where('restype',$restype)->pluck($columns)->all();
+        $resRoleList = NoahResRole::whereIn('role_id', $roleIds)->where('restype',$restype)->pluck($columns)->all();
 
         return $resRoleList;
     }
@@ -415,7 +415,7 @@ class UserRepository extends BaseRepository
      */
     static public function updatePasswordByMasterId($password, $masterId) {
         try {
-            $master = NoahMaster::where('masterid', $masterId)
+            $master = NoahUser::where('masterid', $masterId)
                 ->first();
             if(is_null($master)) {
                 throw new Exception('user_not_exist');
@@ -463,7 +463,7 @@ class UserRepository extends BaseRepository
      */
     static public function updatePasswordByMasterNameAndMobile($password, $mastername, $mobile) {
         try {
-            $master = NoahMaster::where('mastername', $mastername)
+            $master = NoahUser::where('mastername', $mastername)
                 ->where('mobile', $mobile)
                 ->where('status', '=', 1)
                 ->where('isdealer', '=', 1)
@@ -499,7 +499,7 @@ class UserRepository extends BaseRepository
      */
     static public function checkMobileByMasterName($masterName, $mobile) {
         try {
-            $master = NoahMaster::select(['masterid'])
+            $master = NoahUser::select(['masterid'])
                 ->where('mastername', $masterName)
                 ->where('mobile', $mobile)
                 ->where('status', '=', 1)

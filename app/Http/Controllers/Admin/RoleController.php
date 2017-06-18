@@ -47,7 +47,7 @@ class RoleController extends BaseController
     public function roleMasters($id)
     {
         $lists = $this->roleRepo->getMastersByroleid($id);
-        $status = \App\Models\Admin\NoahMaster::$status;
+        $status = \App\Models\Admin\NoahUser::$status;
         $data = ['lists'=>$lists,'status'=>$status];
         return view('admin.role_masters',$data);
     }
@@ -133,7 +133,7 @@ class RoleController extends BaseController
         }
         try {
 
-            $this->noahRoleActions->deleteBy(['roleid'=>$roleid]);
+            $this->noahRoleActions->deleteBy(['role_id'=>$roleid]);
             $status = $this->roleRepo->deleteData($roleid);
             if ($status) {
                 return $this->setCode(self::CODE_SUCCESS)->setMsg('删除成功')->toJson();
