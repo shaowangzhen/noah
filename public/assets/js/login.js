@@ -53,7 +53,6 @@ function login() {
         data: {username: $("#username").val(), password: $("#password").val(), _token: $("#_token").val(), code: $('#code').val()},
         dataType: "json",
         success: function (data) {
-            alert(data);
             if (data.code === 1) {
                 location.href = "/";
             } else if (data.code === -5){

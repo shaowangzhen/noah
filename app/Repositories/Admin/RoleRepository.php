@@ -89,8 +89,8 @@ class RoleRepository extends BaseRepository
      */
     public function getMastersByroleid($roleid)
     {
-        $masterids = NoahMasterRoles::where('role_id',$roleid)->pluck('masterid')->toArray();
-        $masters = NoahUser::whereIn('masterid',$masterids)->orderBy('masterid','desc')->get()->toArray();
+        $masterids = NoahUserRole::where('role_id',$roleid)->pluck('user_id')->toArray();
+        $masters = NoahUser::whereIn('id',$masterids)->orderBy('id','desc')->get()->toArray();
 
         return $masters;
     }

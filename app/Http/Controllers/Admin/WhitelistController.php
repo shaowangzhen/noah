@@ -1,11 +1,4 @@
 <?php
-/**
- ** 金融系统-白名单管理
- * Created by PhpStorm.
- * User: yuxinwei
- * Date: 2016/8/10
- * Time: 12:00
- */
 
 namespace App\Http\Controllers\Admin;
 

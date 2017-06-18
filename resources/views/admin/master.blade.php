@@ -28,7 +28,7 @@
                                     <form class="form-inline">
                                         <div class="form-group">
                                             <label for="mastername">用户名</label>
-                                            <input type="mastername" class="form-control" name="mastername" id="mastername" value='{{$params['mastername'] or ''}}' />
+                                            <input type="mastername" class="form-control" name="mastername" id="mastername" value='{{$params['user_name'] or ''}}' />
                                         </div>
                                         <div class="form-group">
                                             <label for="mobile">手机</label>
@@ -66,9 +66,9 @@
                                             </tr>
                                             @foreach ($lists as $list)
                                             <tr>
-                                                <td>{{$list['masterid']}}</td>
-                                                <td>{{$list['mastername']}}</td>
-                                                <td>{{$list['fullname']}}</td>
+                                                <td>{{$list['id']}}</td>
+                                                <td>{{$list['user_name']}}</td>
+                                                <td>{{$list['real_name']}}</td>
                                                 <td>{{$list['mobile']}}</td>
                                                 <td>
                                                     @foreach($list['roles'] as $role)
@@ -76,7 +76,7 @@
                                                     @endforeach
                                                 </td>
                                                 <td>{{$list['statusname']}}</td>
-                                                <td>{{$list['createtime']}}</td>
+                                                <td>{{$list['created_at']}}</td>
                                                 @if (isset($powers['mastercontroller']['masteredit']))
                                                 <td><a href="{{url('admin/master/edit/'.$list['masterid'])}}" class="btn btn-primary btn-xs">修改</a></td>
                                                 @endif

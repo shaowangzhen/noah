@@ -56,6 +56,7 @@ class UserRepository extends BaseRepository
             $selectCols = [
                 'id',
                 'user_name',
+                'real_name',
                 'password',
                 'status',
                 'this_login_time',
@@ -116,7 +117,7 @@ class UserRepository extends BaseRepository
     public static function delLoginInfo()
     {
         try {
-            session(['userInfo' => '']);
+            session(['user_session_info' => '']);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -325,8 +326,6 @@ class UserRepository extends BaseRepository
     {
         $userRoleIdsArr= NoahUserRole::where('id',$masterid)->pluck('role_id')->all();
         return $userRoleIdsArr;
-
-
     }
 
     /**
@@ -336,9 +335,7 @@ class UserRepository extends BaseRepository
      */
     static public function getResRoleByRoleids($roleids='',$columns=['*'])
     {
-
         $roleids  = is_array($roleids) ? $roleids :explode(',',$roleids);
-
         $resRoleList = NoahResRole::select($columns)->whereIn('role_id',$roleids)->get();
         $resRoleList = $resRoleList ? $resRoleList->toArray():[];
         return $resRoleList;
@@ -360,8 +357,6 @@ class UserRepository extends BaseRepository
         $RoleList = NoahRole::select($columns)->whereIn('id',$roleids)->where('status','1')->get();
         $RoleList = $RoleList ? $RoleList->toArray():[];
         return $RoleList;
-
-
 
     }
 
@@ -422,17 +417,6 @@ class UserRepository extends BaseRepository
             }
             $master->password = SELF::makePassword($password);
             $master->save();
-
-            if($master->isdealer == 1) {
-                $dealerNewInfo = DealerNew::where('id', '=', $master->newdealerid)
-                    ->first();
-                if(!is_null($dealerNewInfo)) {
-                    if(!self::updateDealerNewPasswordByDealerInfo($password, $dealerNewInfo)) {
-                        throw new Exception("dealer_update_error");
-                    }
-                    unset($dealerNewInfo);
-                }
-            }
             unset($master);
         } catch(\Exception $e) {
             return false;
@@ -440,148 +424,11 @@ class UserRepository extends BaseRepository
         return true;
     }
 
-    static public function updateDealerNewPasswordByDealerInfo($password, $dealerNewInfo) {
-        try {
-            if(!is_null($dealerNewInfo)) {
-                $dealerHash = $dealerNewInfo->hash;
-                $dealerPassword = md5(md5($password).$dealerHash);
-                $dealerNewInfo->password = $dealerPassword;
-                $dealerNewInfo->save();
-            }
-        } catch(Exception $e) {
-            return false;
-        }
-        return true;
-    }
 
-    /**
-     * 通过用户名和手机号更新用户密码
-     * @param $password
-     * @param $mastername
-     * @param $mobile
-     * @return bool
-     */
-    static public function updatePasswordByMasterNameAndMobile($password, $mastername, $mobile) {
-        try {
-            $master = NoahUser::where('mastername', $mastername)
-                ->where('mobile', $mobile)
-                ->where('status', '=', 1)
-                ->where('isdealer', '=', 1)
-                ->first();
-            if(is_null($master)) {
-                throw new Exception('user_not_exist');
-            }
-            $master->password = SELF::makePassword($password);
-            $master->save();
 
-            if($master->isdealer == 1) {
-                $dealerNewInfo = DealerNew::where('id', '=', $master->newdealerid)
-                    ->first();
-                if(!is_null($dealerNewInfo)) {
-                    if(!self::updateDealerNewPasswordByDealerInfo($password, $dealerNewInfo)) {
-                        throw new Exception("dealer_update_error");
-                    }
-                    unset($dealerNewInfo);
-                }
-            }
-            unset($master);
-        } catch(\Exception $e) {
-            return false;
-        }
-        return true;
-    }
 
-    /**
-     * 通过用户名检查手机是否有效
-     * @param $masterName
-     * @param $mobile
-     * @return bool
-     */
-    static public function checkMobileByMasterName($masterName, $mobile) {
-        try {
-            $master = NoahUser::select(['masterid'])
-                ->where('mastername', $masterName)
-                ->where('mobile', $mobile)
-                ->where('status', '=', 1)
-                ->where('isdealer', '=', 1)
-                ->first();
-            if(!is_null($master)) {
-                unset($master);
-                return true;
-            }
-        } catch(\Exception $e) {
-            return false;
-        }
-        return false;
-    }
 
-    /**
-     * 制作验证码
-     * @param $mobile
-     * @return string
-     */
-    static public function makeSMSCode($mobile, $digit = 6, $key = self::REDIS_KEY_APPEND) {
-        $smsCode = md5(microtime(true));
-        $seed = rand(0, 10);
-        $smsCode = substr($smsCode, $seed, $digit);
-        $redis = new RedisCommon();
-        $redis->setex($mobile . $key, $smsCode, 90);
-        return $smsCode;
-    }
 
-    /**
-     * 清除缓存内手机验证码
-     * @param $mobile
-     * @return bool
-     */
-    static public function clearSMSCode($mobile, $key = self::REDIS_KEY_APPEND) {
-        $redis = new RedisCommon();
-        $redis->delete($mobile . $key);
-        return true;
-    }
 
-    /**
-     * 检查验证码
-     * @param $smsCode
-     * @param $mobile
-     * @param $password
-     * @return string  1匹配 -1失效 -2不匹配
-     */
-    static public function checkSMSCode($smsCode, $mobile, $password, $key = self::REDIS_KEY_APPEND) {
-        $redis = new RedisCommon();
-        $smsOldCode = $redis->get($mobile . $key);
-        if($smsOldCode === false) {
-            return -1;
-        }
-        if($smsCode != $smsOldCode) {
-            return -2;
-        } else {
-            return 1;
-        }
-        return -1;
-    }
 
-    public static function setLoginMsg($mastername, $msg, $type = 'code')
-    {
-        $redis = new RedisCommon();
-        if($type == 'times'){
-            $time = date('Ymd');
-            $redis->setex($mastername . self::REDIS_KEY_LOGIN_ERROR_TIMES . $time, $msg, 86400);
-        }else{
-            $redis->setex($mastername . self::REDIS_KEY_LOGIN_SMS_CODE, $msg, 60);
-        }
-
-    }
-
-    public static function getLoginMsg($mastername, $type = 'code')
-    {
-        $redis = new RedisCommon();
-        if($type == 'times'){
-            $time = date('Ymd');
-            $msg = $redis->get($mastername . self::REDIS_KEY_LOGIN_ERROR_TIMES . $time);
-        }else{
-            $msg = $redis->get($mastername . self::REDIS_KEY_LOGIN_SMS_CODE);
-        }
-        return $msg;
-    }
 }

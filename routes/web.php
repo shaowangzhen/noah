@@ -31,7 +31,7 @@ Route::group([
     'middleware' => ['checkLogin']
 ], function () {
     //用户
-    Route::get('/master', 'MasterController@master');
+    Route::get('/user', 'UserController@user_list');
     Route::match(['get', 'post'], '/master/add', 'MasterController@masterAdd');
     Route::match(['get', 'post'], '/master/edit/{id}', 'MasterController@masterEdit');
     Route::get('/master/ajaxDBUser', 'MasterController@ajaxDBUser');

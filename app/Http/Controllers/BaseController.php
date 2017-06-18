@@ -44,7 +44,7 @@ class BaseController extends Controller
     public function getUserPowerList()
     {
         $users = UserRepository::getLoginInfo();
-        return $users['powers'];
+        return $users['power_list'];
     }
 
     /**

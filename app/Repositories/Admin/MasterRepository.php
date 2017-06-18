@@ -42,14 +42,15 @@ class MasterRepository extends BaseRepository
     public function getMasterList($params)
     {
         $where['in']['status'] = [0,1];
-        if (!empty($params['mastername'])) {
-            $where['mastername'] = trim($params['mastername']);
+        if (!empty($params['user_name'])) {
+            $where['user_name'] = trim($params['user_name']);
         }
         if (!empty($params['mobile'])) {
             $where['mobile'] = trim($params['mobile']);
         }
-        $orderBy = ['masterid' => 'desc'];
+        $orderBy = ['id' => 'desc'];
         $lists = $this->master->getList('*', $where, $orderBy);
+//        dd($lists);
         $status = NoahUser::$status;
         foreach($lists as $k=>$list){
             $lists[$k]['statusname'] = $status[$list['status']];
@@ -105,7 +106,7 @@ class MasterRepository extends BaseRepository
 
         DB::beginTransaction();
         $flag = $noahMaster->save();
-        $masterid = $noahMaster->masterid;
+        $masterid = $noahMaster->id;
         //角色添加
         $roleIds = !empty($data['roleids']) ? $data['roleids'] : [];
         if($flag && $roleIds){

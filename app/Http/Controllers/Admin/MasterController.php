@@ -29,7 +29,6 @@ class MasterController extends BaseController
     public function master(Request $request)
     {
         $params = $request->all();
-
         $lists = $this->masterRepo->getMasterList($params);
 
         $userPowerList = $this->getUserPowerList();
@@ -74,7 +73,7 @@ class MasterController extends BaseController
      */
     public function masterEdit(Request $request, $masterid)
     {
-        $noahMaster = NoahUser::where('masterid', $masterid)->first();
+        $noahMaster = NoahUser::where('id', $masterid)->first();
         if ($request->isMethod('post')) {
             $data = $request->all();
             $res = $this->masterRepo->updateData($data, $masterid);
@@ -144,7 +143,7 @@ class MasterController extends BaseController
             return $this->setCode(self::CODE_ERROR)->setMsg('旧密码输入错误！')->toJson();
         }
         $savePwd = UserRepository::makePassword(trim($newPwd));
-        (new NoahUser())->updateBy(['password'=> $savePwd], ['masterid'=>$masterId]);
+        (new NoahUser())->updateBy(['password'=> $savePwd], ['id'=>$masterId]);
         return $this->setCode(self::CODE_SUCCESS)->setMsg('编辑成功')->toJson();
 
 //        return $this->setCode(self::CODE_SUCCESS)->setMsg('密码修改成功.')->toJson();

@@ -46,7 +46,7 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a><span>您好！{{session('session_user_info')['user_info']['real_name']}}</span></a>
+                        <a><span>您好！{{session('user_session_info')['user_info']['real_name']}}</span></a>
                     </li>
                     <li>
                         <a><span class="span_showdata"></span></a>
