@@ -153,7 +153,7 @@ function searchLdapUser()
         $('#tips_mastername').html('请输入用户名!');
         return false;
     }
-    $.getJSON('/admin/master/ajaxldapuser/', {mastername: mastername}, function (data) {
+    $.getJSON('/admin/user/ajaxldapuser/', {mastername: mastername}, function (data) {
         if (data) {
             $('#fullname').val(data.fullname);
             $('#mobile').val(data.mobile);
@@ -181,7 +181,7 @@ function searchDBUser()
         $('#tips_mastername').html('请输入用户名!');
         return false;
     }
-    $.getJSON('/admin/master/ajaxDBUser/', {mastername: mastername}, function (data) {
+    $.getJSON('/admin/user/ajaxDBUser/', {mastername: mastername}, function (data) {
         if (data) {
             switch (data.code) {
                 case '0':

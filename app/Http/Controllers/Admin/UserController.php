@@ -10,7 +10,7 @@ use App\Models\Admin\NoahRole;
 use App\Repositories\Admin\UserRepository;
 use App\Repositories\Admin\MasterRepository;
 
-class MasterController extends BaseController
+class UserController extends BaseController
 {
 
     protected $masterRepo;
@@ -26,7 +26,7 @@ class MasterController extends BaseController
      * @param Request $request
      * @return type
      */
-    public function master(Request $request)
+    public function user(Request $request)
     {
         $params = $request->all();
         $lists = $this->masterRepo->getMasterList($params);
@@ -43,7 +43,7 @@ class MasterController extends BaseController
      * @param Request $request
      * @return type
      */
-    public function masterAdd(Request $request)
+    public function userAdd(Request $request)
     {
         if ($request->isMethod('post')) {
             $data = $request->all();
@@ -71,7 +71,7 @@ class MasterController extends BaseController
      * @param Request $request
      * @return type
      */
-    public function masterEdit(Request $request, $masterid)
+    public function userEdit(Request $request, $masterid)
     {
         $noahMaster = NoahUser::where('id', $masterid)->first();
         if ($request->isMethod('post')) {
@@ -106,7 +106,7 @@ class MasterController extends BaseController
         echo json_encode($data);
     }
 
-    public function masterPwdEdit()
+    public function userPwdEdit()
     {
         $masterId = $this->getUserId();
         $masterInfo = $this->masterRepo->getUserInfoByUserId($masterId);
@@ -114,20 +114,7 @@ class MasterController extends BaseController
         return view('admin.master_pwd_edit', $data);
     }
 
-//    public function masterPwdList()
-//    {
-//        $masterName = $this->request['mastername'];
-//        $mobile = $this->request['mobile'];
-//
-//        $lists = $this->masterRepo->getThirdMasterList($masterName, $mobile);
-//        $paramsList = ['mastername' => $masterName, 'mobile' => $mobile];
-//        $data = ['lists' => $lists, 'params' => $paramsList];
-////        if($this->isNoah > 0){
-////            return $data;
-////        }else
-//        $this->outputView('admin.master_pwd_list', $data);
-//    }
-    public function masterPwdModify(Request $request)
+    public function userPwdModify(Request $request)
     {
         $masterId = $this->getUserId();
         $oldPwd = $request['old'];
@@ -145,7 +132,5 @@ class MasterController extends BaseController
         $savePwd = UserRepository::makePassword(trim($newPwd));
         (new NoahUser())->updateBy(['password'=> $savePwd], ['id'=>$masterId]);
         return $this->setCode(self::CODE_SUCCESS)->setMsg('编辑成功')->toJson();
-
-//        return $this->setCode(self::CODE_SUCCESS)->setMsg('密码修改成功.')->toJson();
     }
 }

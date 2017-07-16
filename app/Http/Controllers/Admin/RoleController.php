@@ -9,19 +9,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Models\Admin\NoahRole;
-use App\Models\Admin\NoahRoleActions;
+use App\Models\Admin\NoahRoleAction;
 use App\Repositories\Admin\RoleRepository;
 
 class RoleController extends BaseController
 {
 
-    protected $roleRepo;
     protected $noahRoleActions;
 
-    public function __construct(RoleRepository $roleRepo,NoahRoleActions $noahRoleActions)
+    public function __construct(NoahRoleAction $noahRoleActions)
     {
         parent::__construct();
-        $this->roleRepo = $roleRepo;
         $this->noahRoleActions = $noahRoleActions;
     }
 
@@ -33,9 +31,10 @@ class RoleController extends BaseController
     public function role(Request $request)
     {
         $params = $request->all();
-        $lists = $this->roleRepo->getRoleLists($params);
+        $lists = (new RoleRepository())->getRoleList($params);
         $status = NoahRole::$status;
         $data = array('lists' => $lists, 'params' => $params,'status'=>$status);
+
         return view('admin.role', $data);
     }
 
@@ -44,12 +43,12 @@ class RoleController extends BaseController
      * @param int $id
      * @return type
      */
-    public function roleMasters($id)
+    public function user($id)
     {
-        $lists = $this->roleRepo->getMastersByroleid($id);
+        $lists = (new RoleRepository())->getUsersByRoleId($id);
         $status = \App\Models\Admin\NoahUser::$status;
         $data = ['lists'=>$lists,'status'=>$status];
-        return view('admin.role_masters',$data);
+        return view('admin.role_users',$data);
     }
 
     /**
@@ -91,7 +90,7 @@ class RoleController extends BaseController
      * @param int $roleid
      * @return json
      */
-    public function roleEdit(Request $request, $roleid)
+    public function roleEdit(Request $request, $roleId)
     {
         if ($request->isMethod('post')) {
             $this->validate($request, [
@@ -99,15 +98,16 @@ class RoleController extends BaseController
                 'content' => 'required|min:1|max:200'
             ]);
             $user = $this->getUserInfo();
-            $data['name'] = $request->input('name');
-            $data['content'] = $request->input('content');
+            $data['role_name'] = $request->input('name');
+            $data['description'] = $request->input('content');
             $data['status'] = $request->input('status');
-            $data['creatorid'] = $user['users']['masterid'];
-            $isexists = $this->roleRepo->checkRoleName($data['name'], $roleid);
+            $data['creator_id'] = $user['user_info']['id'];
+            $roleRepo = new RoleRepository();
+            $isexists = $roleRepo->checkRoleName($data['role_name'], $roleId);
             if ($isexists) {
                 return $this->setCode(self::CODE_ERROR)->setMsg('角色名已被占用')->toJson();
             }
-            if ($this->roleRepo->editData($roleid, $data)) {
+            if ($roleRepo->editData($roleId, $data)) {
                 // 修改成功
                 return $this->setCode(self::CODE_SUCCESS)->setMsg('修改成功')->toJson();
             } else {

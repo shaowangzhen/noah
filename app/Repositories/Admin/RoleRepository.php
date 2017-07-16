@@ -4,27 +4,20 @@ namespace App\Repositories\Admin;
 
 use App\Repositories\BaseRepository;
 use App\Models\Admin\NoahRole;
-use App\Models\Admin\NoahMasterRoles;
-use App\Models\Admin\NoahMaster;
+use App\Models\Admin\NoahUserRole;
+use App\Models\Admin\NoahUser;
 
 class RoleRepository extends BaseRepository
 {
 
-    protected $role;
-
-    function __construct(NoahRole $role)
-    {
-        $this->role = $role;
-    }
-
-    public function getRoleLists($params)
+    public function getRoleList($params)
     {
         $where = [];
         if (!empty($params['name'])) {
             $where['name'] = trim($params['name']);
         }
-        $orderBy = ['role_id' => 'desc'];
-        $data = $this->role->getList('*', $where, $orderBy);
+        $orderBy = ['id' => 'desc'];
+        $data = (new NoahRole())->getList(['id','role_name','description','status','created_at'], $where, $orderBy);
 
         return $data;
     }
@@ -45,10 +38,10 @@ class RoleRepository extends BaseRepository
      * 检测name是否重复
      * @param type $name
      */
-    public function checkRoleName($role_name, $roleid = 0)
+    public function checkRoleName($roleName, $roleId = 0)
     {
-        $where = $roleid > 0 ? "name = '" . $role_name . "' and roleid<>$roleid" : "name = '" . $role_name . "'";
-        return $this->role->whereRaw($where)->select('role_id')->get()->toArray();
+        $where = $roleId > 0 ? "role_name = '" . $roleName . "' and id<>$roleId" : "role_name = '" . $roleName . "'";
+        return (new NoahRole())->whereRaw($where)->select('id')->get()->toArray();
     }
 
     /**
@@ -59,7 +52,7 @@ class RoleRepository extends BaseRepository
     public function createData($data)
     {
         //unset($data['_token']);
-        return $this->role->insert($data);
+        return (new NoahRole())->insert($data);
     }
 
     /**
@@ -70,7 +63,7 @@ class RoleRepository extends BaseRepository
      */
     public function editData($id, $data)
     {
-        return $this->role->where('role_id', $id)->update($data);
+        return (new NoahRole())->where('id', $id)->update($data);
     }
 
     /**
@@ -80,18 +73,17 @@ class RoleRepository extends BaseRepository
      */
     public function deleteData($id)
     {
-        return $this->role->where('role_id', $id)->delete();
+        return (new NoahRole())->where('role_id', $id)->delete();
     }
 
     /**
      * 角色下的用户
-     * @param type $roleid
      */
-    public function getMastersByroleid($roleid)
+    public function getUsersByRoleId($roleid)
     {
-        $masterids = NoahUserRole::where('role_id',$roleid)->pluck('user_id')->toArray();
-        $masters = NoahUser::whereIn('id',$masterids)->orderBy('id','desc')->get()->toArray();
+        $userIds = NoahUserRole::where('role_id',$roleid)->pluck('user_id')->toArray();
+        $users = NoahUser::whereIn('id',$userIds)->orderBy('id','desc')->get()->toArray();
 
-        return $masters;
+        return $users;
     }
 }

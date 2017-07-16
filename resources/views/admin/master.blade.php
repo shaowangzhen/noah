@@ -6,8 +6,8 @@
             <small></small>
         </h1>
         <ol class="breadcrumb">
-            @if (isset($powers['mastercontroller']['master']))
-            <li><a href="{{url('admin/master')}}"><i class="fa fa-dashboard"></i>用户管理</a></li>
+            @if (isset($powers['UserController']['user']))
+            <li><a href="{{url('admin/user')}}"><i class="fa fa-dashboard"></i>用户管理</a></li>
             <li class="active">用户列表</li>
             @endif()
         </ol>
@@ -78,7 +78,7 @@
                                                 <td>{{$list['statusname']}}</td>
                                                 <td>{{$list['created_at']}}</td>
                                                 @if (isset($powers['mastercontroller']['masteredit']))
-                                                <td><a href="{{url('admin/master/edit/'.$list['masterid'])}}" class="btn btn-primary btn-xs">修改</a></td>
+                                                <td><a href="{{url('admin/user/edit/'.$list['masterid'])}}" class="btn btn-primary btn-xs">修改</a></td>
                                                 @endif
                                             </tr>
                                             @endforeach

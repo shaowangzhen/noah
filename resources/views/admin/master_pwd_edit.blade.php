@@ -10,7 +10,7 @@
             <small></small>
         </h1>
         <ol class="breadcrumb">
-            <li><a href="{{url('admin/master_pwd_list')}}"><i class="fa fa-dashboard"></i>密码管理</a></li>
+            <li><a href="{{url('admin/user_pwd_list')}}"><i class="fa fa-dashboard"></i>密码管理</a></li>
             <li class="active">密码修改</li>
         </ol>
     </section>
@@ -19,7 +19,7 @@
     <section class="content" style="margin:0 15px 0 15px;">
         <div class="widget-body">
             <div id="horizontal-form">
-                <form class="form-horizontal" role="form" method="post" id="master_form" action="{{url('admin/master/pwdModify')}}">
+                <form class="form-horizontal" role="form" method="post" id="master_form" action="{{url('admin/user/pwdModify')}}">
                     <div class="form-group">
                         <label for="mastername" class="col-sm-2 control-label no-padding-right">用户名:</label>
                         <div class="col-sm-4">

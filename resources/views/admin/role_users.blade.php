@@ -9,11 +9,11 @@
     </tr>
     @foreach($lists as $list)
     <tr>
-        <td>{{$list['masterid']}}</td>
-        <td>{{$list['mastername']}}</td>
-        <td>{{$list['fullname']}}</td>
+        <td>{{$list['id']}}</td>
+        <td>{{$list['user_name']}}</td>
+        <td>{{$list['real_name']}}</td>
         <td>{{$list['email']}}</td>
-        <td>{{$list['deptname']}}</td>
+        <td>{{$list['dept_name']}}</td>
         <td>{{$status[$list['status']]}}</td>
     </tr>
     @endforeach

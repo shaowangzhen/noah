@@ -6,7 +6,7 @@
         <small></small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="{{url('admin/master_pwd_list')}}"><i class="fa fa-dashboard"></i>密码管理</a></li>
+        <li><a href="{{url('admin/user_pwd_list')}}"><i class="fa fa-dashboard"></i>密码管理</a></li>
         <li class="active">可改密码用户列表</li>
     </ol>
 </section>
@@ -66,7 +66,7 @@
                                             <td>{{$list['roleName']}}</td>
                                             <td>{{$list['statusname']}}</td>
                                             <td>{{$list['createtime']}}</td>
-                                            <td><a href="{{url('admin/master_pwd_edit?masterid='.$list['masterid'])}}" class="btn btn-primary btn-xs">修改</a></td>
+                                            <td><a href="{{url('admin/user_pwd_edit?masterid='.$list['masterid'])}}" class="btn btn-primary btn-xs">修改</a></td>
                                         </tr>
                                         @endforeach
                                     </table>

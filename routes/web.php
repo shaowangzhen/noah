@@ -31,17 +31,17 @@ Route::group([
     'middleware' => ['checkLogin']
 ], function () {
     //用户
-    Route::get('/user', 'UserController@user_list');
-    Route::match(['get', 'post'], '/master/add', 'MasterController@masterAdd');
-    Route::match(['get', 'post'], '/master/edit/{id}', 'MasterController@masterEdit');
-    Route::get('/master/ajaxDBUser', 'MasterController@ajaxDBUser');
-    Route::match(['get', 'post'], '/master/pwdEdit', 'MasterController@masterPwdEdit');
-    Route::match(['get', 'post'], '/master/pwdModify', 'MasterController@masterPwdModify');
+    Route::get('/user', 'UserController@user');
+    Route::match(['get', 'post'], '/user/add', 'UserController@userAdd');
+    Route::match(['get', 'post'], '/user/edit/{id}', 'UserController@userEdit');
+    Route::get('/user/ajaxDBUser', 'UserController@ajaxDBUser');
+    Route::match(['get', 'post'], '/user/pwdEdit', 'UserController@userPwdEdit');
+    Route::match(['get', 'post'], '/user/pwdModify', 'UserController@userPwdModify');
 
 
     //角色
     Route::get('/role', 'RoleController@role');
-    Route::post('/role/masters/{id}', 'RoleController@roleMasters');
+    Route::post('/role/user/{id}', 'RoleController@user');
     Route::post('/role/add', 'RoleController@roleAdd');
     Route::post('/role/edit/{id}', 'RoleController@roleEdit');
     Route::get('/role/del/{id}', 'RoleController@roleDel');
