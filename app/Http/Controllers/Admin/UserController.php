@@ -35,7 +35,7 @@ class UserController extends BaseController
 
         $data = ['lists' => $lists, 'params' => $params,'powers' => $userPowerList];
 
-        return view('admin.master', $data);
+        return view('admin.user', $data);
     }
 
     /**

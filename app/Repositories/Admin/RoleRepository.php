@@ -73,7 +73,7 @@ class RoleRepository extends BaseRepository
      */
     public function deleteData($id)
     {
-        return (new NoahRole())->where('role_id', $id)->delete();
+        return (new NoahRole())->where('id', $id)->delete();
     }
 
     /**

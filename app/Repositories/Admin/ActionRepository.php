@@ -3,7 +3,7 @@ namespace App\Repositories\Admin;
 
 use App\Repositories\BaseRepository;
 use App\Models\Admin\NoahAction;
-use App\Models\Admin\NoahRoleActions;
+use App\Models\Admin\NoahRoleAction;
 
 class ActionRepository extends BaseRepository {
     //定义权限编号初始值
@@ -14,7 +14,7 @@ class ActionRepository extends BaseRepository {
     
     public function __construct() {
         $this->action = new NoahAction();
-        $this->roleActions = new NoahRoleActions();
+        $this->roleActions = new NoahRoleAction();
     }
     public function add_manager($input){
         NoahAction::create($input);
@@ -53,9 +53,9 @@ class ActionRepository extends BaseRepository {
      */
     public function getRoleAction($actions,$action)
     {
-        $list = $this->action->whereIn('actionid',$actions)->orderBy('orderid', 'desc')->get()->toarray();
+        $list = $this->action->whereIn('id',$actions)->orderBy('order_id', 'desc')->get()->toarray();
         $arr = [];
-        $lists = $this->r_son($list, 0, $arr, $i = 0, $this->array_keys($action, 'actionid'));
+        $lists = $this->r_son($list, 0, $arr, $i = 0, $this->array_keys($action, 'id'));
         return $lists;
     }
 
@@ -63,10 +63,10 @@ class ActionRepository extends BaseRepository {
     {
         if (! empty($list)) {
             foreach ($list as $k => $v) {
-                if ($v['parent_actionid'] == $pid) {
-                    $arr[$i]['text'] = $v['actionname'];
-                    $arr[$i]['tags'] = $v['actionid'];
-                    if (! empty($action[$v['actionid']])) {
+                if ($v['pid'] == $pid) {
+                    $arr[$i]['text'] = $v['action_name'];
+                    $arr[$i]['tags'] = $v['id'];
+                    if (! empty($action[$v['id']])) {
                         $arr[$i]['href'] = 1;
                         $arr[$i]['state'] = [
                             'checked' => true,
@@ -79,7 +79,7 @@ class ActionRepository extends BaseRepository {
                             'expanded' => false
                         ];
                     }
-                    $this->r_son($list, $v['actionid'], $arr[$i]['nodes'], 0, $action);
+                    $this->r_son($list, $v['id'], $arr[$i]['nodes'], 0, $action);
                     $i = $i + 1;
                 }
             }
@@ -116,7 +116,7 @@ class ActionRepository extends BaseRepository {
         //获取当前记录
         $item = $this->action->find($actionid);
         //如果是一级目录
-        $res = $this->action->where('parent_actionid',$item->parent_actionid)->get();
+        $res = $this->action->where('pid',$item->pid)->get();
         if ($res->count()) {
             $max = 0;
             //取得最大的

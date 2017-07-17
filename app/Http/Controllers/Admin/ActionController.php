@@ -7,6 +7,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
+use App\Models\Admin\NoahAction;
 use Illuminate\Http\Request;
 use App\Repositories\Admin\ActionRepository;
 
@@ -33,52 +34,51 @@ class ActionController extends BaseController
      */
     public function addInfo()
     {
-        $action_id = isset($this->request['actionid']) && !empty($this->request['actionid']) ? $this->request['actionid']:0;
-        $action_service = new ActionRepository();
-        $service = $action_service->action;
+        $actionId = isset($this->request['actionid']) && !empty($this->request['actionid']) ? $this->request['actionid']:0;
+        $actionService = new ActionRepository();
+        $noahActionModel = new NoahAction();
 
         //更新操作
         $is_update = false;
-        if ($action_id > 0) {
-            $service = $service->find($action_id);
+        if ($actionId > 0) {
+            $noahActionModel = $noahActionModel->find($actionId);
             $is_update = true;
         }
         $data = $this->_checkParams($this->request->all());
-        $service->actionname            = $data['actionname'];
-        $service->controller            = $data['controller'];
-        $service->actions               = $data['actions'];
-        $service->orderid               = $data['orderid'];
-        $service->url                   = $data['url'];
-        $service->type                  = $data['type'];
-        $service->code                  = $data['code'];
-        $service->icon                  = $data['icon'];
-        $service->status                = $data['status'];
-        $service->creatorid             = $this->getUserId();
+        $noahActionModel->action_name            = $data['action_name'];
+        $noahActionModel->controller            = $data['controller'];
+        $noahActionModel->actions               = $data['actions'];
+        $noahActionModel->order_id               = $data['order_id'];
+        $noahActionModel->url                   = $data['url'];
+        $noahActionModel->type                  = $data['type'];
+        $noahActionModel->code                  = $data['code'];
+        $noahActionModel->icon                  = $data['icon'];
+        $noahActionModel->status                = $data['status'];
+        $noahActionModel->creator_id             = $this->getUserId();
 
         //添加根节点
-        if ($this->request['parent_actionid'] == -1 && $action_id == -1) {
-            $service->parent_actionid = 0;
+        if ($this->request['parent_actionid'] == -1 && $actionId == -1) {
+            $noahActionModel->pid = 0;
         }
 
         //添加节点
         if ($this->request['parent_actionid'] != -1) {
-            $service->parent_actionid = $this->request['parent_actionid'];
+            $noahActionModel->pid = $this->request['parent_actionid'];
             $is_child = 1;
         }
 
-        if ($service->save()) {
+        if ($noahActionModel->save()) {
             if($is_update){
                 return $this->setCode(self::CODE_UPDATE)
                     ->setMsg('更新成功')
-                    ->setData( array('id' => $service->actionid, 'pid' => $service->parent_actionid))
+                    ->setData( array('id' => $noahActionModel->id, 'pid' => $noahActionModel->pid))
                     ->toJson();
             }
-            $action_service->update_action_code($service->actionid);
-            $data = array('id'=>$service->actionid, 'pid'=>$service->parent_actionid);
+            $actionService->update_action_code($noahActionModel->id);
+            $data = array('id'=>$noahActionModel->id, 'pid'=>$noahActionModel->pid);
             return $this->setCode(self::CODE_SUCCESS)->setMsg('添加成功')->setData($data)->toJson();
         } else {
             return $this->setCode(self::CODE_ERROR)->setMsg('添加失败')->toJson();
-
         }
     }
     
@@ -172,9 +172,9 @@ class ActionController extends BaseController
     {
         $data['controller'] = isset($data['controller']) ? trim($data['controller']) : '';
         $data['actions'] = isset($data['actions']) ? trim($data['actions']) : '';
-        $data['actionname'] = isset($data['actionname']) ? trim($data['actionname']) : '';
-        $data['parent_actionid'] = isset($data['parent_actionid']) ? intval($data['parent_actionid']) : 0;
-        $data['orderid'] = isset($data['orderid']) ? intval($data['orderid']) : 0;
+        $data['action_name'] = isset($data['actionname']) ? trim($data['actionname']) : '';
+        $data['pid'] = isset($data['parent_actionid']) ? intval($data['parent_actionid']) : 0;
+        $data['order_id'] = isset($data['orderid']) ? intval($data['orderid']) : 0;
         $data['status'] = isset($data['status']) ? intval($data['status']) : -1;
         $data['url'] = isset($data['url']) ? trim($data['url']) : '';
         $data['type'] = isset($data['type']) ? intval($data['type']) : 0;

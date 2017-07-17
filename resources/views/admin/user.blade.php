@@ -35,8 +35,8 @@
                                             <input type="mobile" class="form-control" name="mobile" id="mobile" value='{{$params['mobile'] or ''}}' />
                                         </div>
                                         <button type="submit" class="btn btn-default">查询</button>
-                                        @if (isset($powers['mastercontroller']['masteradd']))
-                                            <a type="button" href="master/add" class="btn btn-default" style="float:right;">添加</a>
+                                        @if (isset($powers['usercontroller']['useradd']))
+                                            <a type="button" href="user/add" class="btn btn-default" style="float:right;">添加</a>
                                         @endif
                                     </form>
                                 </div>

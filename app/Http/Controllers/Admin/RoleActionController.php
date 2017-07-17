@@ -17,13 +17,11 @@ use DB;
 class RoleActionController extends BaseController
 {
 
-    protected $roleActionRepo;
     protected $roleRepo;
 
     public function __construct(RoleActionRepository $roleActionRepo, RoleRepository $roleRepo)
     {
         parent::__construct();
-        $this->roleActionRepo = $roleActionRepo;
         $this->roleRepo = $roleRepo;
     }
 
@@ -34,20 +32,19 @@ class RoleActionController extends BaseController
      */
     public function set($id)
     {
-        //操作权限
-        $actionRepo = new ActionRepository();
         // 查看已经有的权限
-        $roleActionsList = $this->roleActionRepo->getActionsList($id);
+        $roleActionRepo = new RoleActionRepository();
+        $roleActionsList = $roleActionRepo->getActionsList($id);
         // 查看当前用户可支配权限
-        $actions = $this->roleActionRepo->getActionsLists();
+        $actions = $roleActionRepo->getActionsLists();
         // 获得所有权限
+        $actionRepo = new ActionRepository();
         $getList = $actionRepo->getRoleAction($actions, $roleActionsList);
         $json = json_encode($getList);
 
-
         $data = ['json' => $json, 'role_id' => $id];
 
-        return view('admin.roleaction', $data);
+        return view('admin.role_action', $data);
     }
 
     /**

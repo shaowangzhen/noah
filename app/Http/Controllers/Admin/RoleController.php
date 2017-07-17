@@ -14,15 +14,6 @@ use App\Repositories\Admin\RoleRepository;
 
 class RoleController extends BaseController
 {
-
-    protected $noahRoleActions;
-
-    public function __construct(NoahRoleAction $noahRoleActions)
-    {
-        parent::__construct();
-        $this->noahRoleActions = $noahRoleActions;
-    }
-
     /**
      * 角色列表
      * @param Request $request
@@ -64,15 +55,17 @@ class RoleController extends BaseController
                 'content' => 'required|min:1|max:200'
             ]);
             $user = $this->getUserInfo();
-            $data['name'] = $request->input('name');
-            $data['content'] = $request->input('content');
+            $data['role_name'] = $request->input('name');
+            $data['description'] = $request->input('content');
             $data['status'] = $request->input('status');
-            $data['creatorid'] = $user['users']['masterid'];
-            $isexists = $this->roleRepo->checkRoleName($data['name']);
+            $data['creator_id'] = $user['user_info']['id'];
+
+            $roleRepo = new RoleRepository();
+            $isexists = $roleRepo->checkRoleName($data['role_name']);
             if ($isexists) {
                 return $this->setCode(self::CODE_ERROR)->setMsg('角色名已存在')->toJson();
             }
-            if ($this->roleRepo->createData($data)) {
+            if ($roleRepo->createData($data)) {
                 // 修改成功
                 return $this->setCode(self::CODE_SUCCESS)->setMsg('修改成功')->toJson();
             } else {
@@ -121,20 +114,19 @@ class RoleController extends BaseController
 
     /**
      * 角色删除
-     * @param int $roleid
+     * @param int $roleId
      * @return json
      */
-    public function roleDel($roleid)
+    public function roleDel($roleId)
     {
         //超级管理员不允许删除
         $admin = config('auth.admin');
-        if ($admin == $roleid) {
+        if ($admin == $roleId) {
             return $this->setCode(self::CODE_ERROR)->setMsg('超级管理员不允许删除')->toJson();
         }
         try {
-
-            $this->noahRoleActions->deleteBy(['role_id'=>$roleid]);
-            $status = $this->roleRepo->deleteData($roleid);
+            (new NoahRoleAction())->deleteBy(['role_id'=>$roleId]);
+            $status = (new RoleRepository())->deleteData($roleId);
             if ($status) {
                 return $this->setCode(self::CODE_SUCCESS)->setMsg('删除成功')->toJson();
             } else {
