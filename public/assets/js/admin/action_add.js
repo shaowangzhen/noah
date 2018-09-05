@@ -27,8 +27,8 @@ $(function () {
 });
 function changeType(type)
 {
-    var pid = $('select[name=parent_actionid]').closest('.form-group');
-    var ord = $('input[name=orderid]').closest('.form-group');
+    var pid = $('select[name=pid]').closest('.form-group');
+    var ord = $('input[name=order_id]').closest('.form-group');
     if (type == 1)
     {
         conChange(0);

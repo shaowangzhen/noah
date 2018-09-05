@@ -14,9 +14,10 @@ use App\Repositories\Admin\ActionRepository;
 class ActionController extends BaseController
 {
     protected $request;
-    public function __construct(Request $request){
+    public function __construct(Request $request, NoahAction $noahAction){
         parent::__construct();
         $this->request = $request;
+        $this->NoahAction = $noahAction;
     }
     /**
      * 角色列表
@@ -34,14 +35,13 @@ class ActionController extends BaseController
      */
     public function addInfo()
     {
-        $actionId = isset($this->request['actionid']) && !empty($this->request['actionid']) ? $this->request['actionid']:0;
+        $actionId = isset($this->request['action_id']) && !empty($this->request['action_id']) ? $this->request['action_id']:0;
         $actionService = new ActionRepository();
-        $noahActionModel = new NoahAction();
 
         //更新操作
         $is_update = false;
         if ($actionId > 0) {
-            $noahActionModel = $noahActionModel->find($actionId);
+            $noahActionModel = $this->NoahAction->find($actionId);
             $is_update = true;
         }
         $data = $this->_checkParams($this->request->all());
@@ -57,13 +57,13 @@ class ActionController extends BaseController
         $noahActionModel->creator_id             = $this->getUserId();
 
         //添加根节点
-        if ($this->request['parent_actionid'] == -1 && $actionId == -1) {
+        if ($this->request['pid'] == -1 && $actionId == -1) {
             $noahActionModel->pid = 0;
         }
 
         //添加节点
-        if ($this->request['parent_actionid'] != -1) {
-            $noahActionModel->pid = $this->request['parent_actionid'];
+        if ($this->request['pid'] != -1) {
+            $noahActionModel->pid = $this->request['pid'];
             $is_child = 1;
         }
 
@@ -91,23 +91,21 @@ class ActionController extends BaseController
         if(empty($id)){
             $id = 0;
         }
-        $action_service = new ActionRepository;
-        $service = $action_service->action;
-        $item = $service->where(array('parent_actionid'=>$id))->orderBy('orderid','DESC')->get();
+        $item = $this->NoahAction->where(array('pid'=>$id))->orderBy('order_id','DESC')->get();
         $data = [];
         foreach( $item as $val){
             $type = 'item';
-            $status = $this->_checkChildren($val['actionid']);
+            $status = $this->_checkChildren($val['id']);
             if($status){
                 $type = 'folder';
             }
             $node = array(
-                'id' => $val['actionid'],
-                'name' => $val['actionname'],
-                'order' => $val['orderid'],
+                'id' => $val['id'],
+                'name' => $val['action_name'],
+                'order' => $val['order_id'],
                 'type' => $type,
-                'pid' => $val['parent_actionid'],
-                "additionalParameters" => array('id' => $val['actionid'], "children" => true, "itemSelected" => true)
+                'pid' => $val['pid'],
+                "additionalParameters" => array('id' => $val['id'], "children" => true, "itemSelected" => true)
             );
             $data[] = $node;
 
@@ -124,10 +122,8 @@ class ActionController extends BaseController
      */
     private function _checkChildren($actionid)
     {
-        $action_service = new ActionRepository();
-        $service = $action_service->action;
-        $item = $service->where('parent_actionid',$actionid)->first();
-        return isset($item->actionid) ? true : false;
+        $item = $this->NoahAction->where('pid',$actionid)->first();
+        return isset($item->id) ? true : false;
     }
 
     /**
@@ -137,9 +133,7 @@ class ActionController extends BaseController
     public function getInfo()
     {
         $id = $this->request['id'];
-        $action_service = new ActionRepository();
-        $service = $action_service->action;
-        $item = $service->find($id);
+        $item = $this->NoahAction->find($id);
         $res = ['code'=>1,'msg'=>'操作成功','data'=>$item];
         return json_encode($res);
     }
@@ -151,17 +145,14 @@ class ActionController extends BaseController
      */
     public function delInfo()
     {
-        $action_id = $this->request['id'];
-        $action_service = new ActionRepository();
-        $service = $action_service->action;
-        $del_item = $service->find($action_id);
-        $status = $service->where('actionid',$action_id)->delete();
-        $item = $service->where('parent_actionid',$action_id)->get();
+        $actionId = $this->request['id'];
+        $status = $this->NoahAction->where('id',$actionId)->delete();
+        $item = $this->NoahAction->where('pid',$actionId)->get();
         if($item) {
-            $effect_row = $service->where('parent_actionid',$action_id)->delete();
+            $this->NoahAction->where('pid',$actionId)->delete();
         }
 
-        $res = ['code'=>1,'msg'=>'操作成功','data'=>array('id'=>$action_id)];
+        $res = ['code'=>1,'msg'=>'操作成功','data'=>array('id'=>$actionId)];
         if($status) {
             return json_encode($res);
         }
@@ -173,8 +164,8 @@ class ActionController extends BaseController
         $data['controller'] = isset($data['controller']) ? trim($data['controller']) : '';
         $data['actions'] = isset($data['actions']) ? trim($data['actions']) : '';
         $data['action_name'] = isset($data['actionname']) ? trim($data['actionname']) : '';
-        $data['pid'] = isset($data['parent_actionid']) ? intval($data['parent_actionid']) : 0;
-        $data['order_id'] = isset($data['orderid']) ? intval($data['orderid']) : 0;
+        $data['pid'] = isset($data['pid']) ? intval($data['pid']) : 0;
+        $data['order_id'] = isset($data['order_id']) ? intval($data['order_id']) : 0;
         $data['status'] = isset($data['status']) ? intval($data['status']) : -1;
         $data['url'] = isset($data['url']) ? trim($data['url']) : '';
         $data['type'] = isset($data['type']) ? intval($data['type']) : 0;

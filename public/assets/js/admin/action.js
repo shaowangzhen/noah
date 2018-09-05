@@ -97,7 +97,7 @@ $(document).ready(function () {
             var data = $('.form-horizontal').serializeObject();
             $.post(_url_add, data, function (res) {
             var actionid = res.data['id'];
-            var pid = $('#parent_actionid').val();
+            var pid = $('#pid').val();
             var action_name = $('#actionname').val();
             //添加操作
             if (res.code == 1) {
@@ -200,12 +200,12 @@ function do_action(tar, event) {
     var cur_node_name = $('.cur_node_' + data_id).text();
     if (action_id == 1) {
         $('.form-title').html('添加 ' + cur_node_name + ' 同级节点信息');
-        $('#parent_actionid').val(pid);
+        $('#pid').val(pid);
     }
 
     if (action_id == 3) {
         $('.form-title').html('添加 ' + cur_node_name + ' 子节点信息');
-        $('#parent_actionid').val(data_id);
+        $('#pid').val(data_id);
     }
 
     event.stopPropagation();

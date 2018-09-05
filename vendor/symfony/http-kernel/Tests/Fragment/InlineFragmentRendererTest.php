@@ -50,7 +50,7 @@ class InlineFragmentRendererTest extends TestCase
 
         $strategy = new InlineFragmentRenderer($this->getKernelExpectingRequest($subRequest));
 
-        $strategy->render(new ControllerReference('main_controller', array('object' => $object), array()), Request::create('/'));
+        $this->assertSame('foo', $strategy->render(new ControllerReference('main_controller', array('object' => $object), array()), Request::create('/'))->getContent());
     }
 
     /**
@@ -97,14 +97,12 @@ class InlineFragmentRendererTest extends TestCase
 
     public function testRenderWithTrustedHeaderDisabled()
     {
-        $trustedHeaderName = Request::getTrustedHeaderName(Request::HEADER_CLIENT_IP);
-
-        Request::setTrustedHeaderName(Request::HEADER_CLIENT_IP, '');
+        Request::setTrustedProxies(array(), 0);
 
         $strategy = new InlineFragmentRenderer($this->getKernelExpectingRequest(Request::create('/')));
-        $strategy->render('/', Request::create('/'));
+        $this->assertSame('foo', $strategy->render('/', Request::create('/'))->getContent());
 
-        Request::setTrustedHeaderName(Request::HEADER_CLIENT_IP, $trustedHeaderName);
+        Request::setTrustedProxies(array(), -1);
     }
 
     /**
@@ -152,22 +150,6 @@ class InlineFragmentRendererTest extends TestCase
         return $kernel;
     }
 
-    /**
-     * Creates a Kernel expecting a request equals to $request
-     * Allows delta in comparison in case REQUEST_TIME changed by 1 second.
-     */
-    private function getKernelExpectingRequest(Request $request)
-    {
-        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
-        $kernel
-            ->expects($this->any())
-            ->method('handle')
-            ->with($this->equalTo($request, 1))
-        ;
-
-        return $kernel;
-    }
-
     public function testExceptionInSubRequestsDoesNotMangleOutputBuffers()
     {
         $controllerResolver = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Controller\\ControllerResolverInterface')->getMock();
@@ -206,7 +188,7 @@ class InlineFragmentRendererTest extends TestCase
         $expectedSubRequest = Request::create('/');
         $expectedSubRequest->headers->set('Surrogate-Capability', 'abc="ESI/1.0"');
 
-        if (Request::getTrustedHeaderName(Request::HEADER_CLIENT_IP)) {
+        if (Request::HEADER_X_FORWARDED_FOR & Request::getTrustedHeaderSet()) {
             $expectedSubRequest->headers->set('x-forwarded-for', array('127.0.0.1'));
             $expectedSubRequest->server->set('HTTP_X_FORWARDED_FOR', '127.0.0.1');
         }
@@ -220,18 +202,17 @@ class InlineFragmentRendererTest extends TestCase
 
     public function testESIHeaderIsKeptInSubrequestWithTrustedHeaderDisabled()
     {
-        $trustedHeaderName = Request::getTrustedHeaderName(Request::HEADER_CLIENT_IP);
-        Request::setTrustedHeaderName(Request::HEADER_CLIENT_IP, '');
+        Request::setTrustedProxies(array(), 0);
 
         $this->testESIHeaderIsKeptInSubrequest();
 
-        Request::setTrustedHeaderName(Request::HEADER_CLIENT_IP, $trustedHeaderName);
+        Request::setTrustedProxies(array(), -1);
     }
 
     public function testHeadersPossiblyResultingIn304AreNotAssignedToSubrequest()
     {
         $expectedSubRequest = Request::create('/');
-        if (Request::getTrustedHeaderName(Request::HEADER_CLIENT_IP)) {
+        if (Request::HEADER_X_FORWARDED_FOR & Request::getTrustedHeaderSet()) {
             $expectedSubRequest->headers->set('x-forwarded-for', array('127.0.0.1'));
             $expectedSubRequest->server->set('HTTP_X_FORWARDED_FOR', '127.0.0.1');
         }
@@ -239,6 +220,22 @@ class InlineFragmentRendererTest extends TestCase
         $strategy = new InlineFragmentRenderer($this->getKernelExpectingRequest($expectedSubRequest));
         $request = Request::create('/', 'GET', array(), array(), array(), array('HTTP_IF_MODIFIED_SINCE' => 'Fri, 01 Jan 2016 00:00:00 GMT', 'HTTP_IF_NONE_MATCH' => '*'));
         $strategy->render('/', $request);
+    }
+
+    /**
+     * Creates a Kernel expecting a request equals to $request
+     * Allows delta in comparison in case REQUEST_TIME changed by 1 second.
+     */
+    private function getKernelExpectingRequest(Request $request, $strict = false)
+    {
+        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
+        $kernel
+            ->expects($this->once())
+            ->method('handle')
+            ->with($this->equalTo($request, 1))
+            ->willReturn(new Response('foo'));
+
+        return $kernel;
     }
 }
 

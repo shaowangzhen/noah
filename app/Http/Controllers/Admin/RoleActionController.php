@@ -81,7 +81,7 @@ class RoleActionController extends BaseController
             if (!empty($info['add'])) {
                 foreach ($info['add'] as $k => $v) {
                     $data['role_id'] = $role_id;
-                    $data['actionid'] = $v;
+                    $data['action_id'] = $v;
                     $data['creatorid'] = $this->getUserId();
                     if (!$this->roleActionRepo->createData($data)) {
                         // 回滚

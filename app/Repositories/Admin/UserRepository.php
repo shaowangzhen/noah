@@ -248,13 +248,13 @@ class UserRepository extends BaseRepository
     }
 
     // 构造树形菜单
-    public static function getMenuTree($data, $parent_actionid)
+    public static function getMenuTree($data, $pid)
     {
         $menuTree = array();
         if ($data) {
             foreach ((array) $data as $k => $v) {
                 // 父亲找到儿子
-                if ($v['pid'] == $parent_actionid) {
+                if ($v['pid'] == $pid) {
                     $v['child'] = self::getMenuTree($data, $v['id']);
                     $menuTree[] = $v;
                 }
@@ -314,13 +314,11 @@ class UserRepository extends BaseRepository
         return $result;
     }
 
-    /*************************以下是功能函数****************************/
 
     /**
      * 根据用户id获取角色ids
      * @param int $masterid 用户id
      * @return array mixed
-     * @author ZhaoZuoWu 2016-02-24
      */
     static public function getUserRoleIdsByMasterId($masterid)
     {

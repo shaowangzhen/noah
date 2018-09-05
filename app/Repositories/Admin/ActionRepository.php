@@ -13,7 +13,6 @@ class ActionRepository extends BaseRepository {
     protected $roleActions;
     
     public function __construct() {
-        $this->action = new NoahAction();
         $this->roleActions = new NoahRoleAction();
     }
     public function add_manager($input){
@@ -35,9 +34,9 @@ class ActionRepository extends BaseRepository {
     {
         if (! empty($list)) {
             foreach ($list as $k => $v) {
-                if ($v['parent_actionid'] == $pid) {
+                if ($v['pid'] == $pid) {
                     $arr[$v['actionid']] = $v;
-                    $this->_son($list, $v['actionid'], $arr[$v['actionid']]['child']);
+                    $this->_son($list, $v['action_id'], $arr[$v['action_id']]['child']);
                 }
             }
             return $arr;
@@ -129,14 +128,14 @@ class ActionRepository extends BaseRepository {
                 $code = $max + 1;
             }else{
                 //计算子节点的code 说明还没有子节点 parent_code . code_start = 102.100=102100
-                $parent = $this->action->find($item->parent_actionid);
+                $parent = $this->action->find($item->pid);
                 $code = $parent->code.self::CODE_START;
             }
         }else{
             $code = self::CODE_START;
         }
 
-        $this->action->where('actionid',$actionid)->update(array('code'=>$code));
+        $this->action->where('action_id',$actionid)->update(array('code'=>$code));
 
     }
     
@@ -145,7 +144,7 @@ class ActionRepository extends BaseRepository {
         $codes = $this->formatCodes();
         if (isset($params['update']) && $params['update'] == 1) {
             foreach ($codes as $id => $code) {
-                $this->action->where('actionid', $id)->update(['code' => $code]);
+                $this->action->where('id', $id)->update(['code' => $code]);
             }
             die('ok');
         } else {
@@ -155,10 +154,10 @@ class ActionRepository extends BaseRepository {
         }
     }
 
-    public function formatCodes($parent_actionid = 1, $parent_code = 100)
+    public function formatCodes($pid = 1, $parent_code = 100)
     {
         $codes = [];
-        $allActions = $this->action->where('parent_actionid',$parent_actionid)->get()->toArray();
+        $allActions = $this->action->where('pid',$pid)->get()->toArray();
         $code = $parent_code.'100';
         
         foreach($allActions as $action){

@@ -203,9 +203,7 @@ class Router implements RegistrarContract, BindingRegistrar
      */
     public function any($uri, $action = null)
     {
-        $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'];
-
-        return $this->addRoute($verbs, $uri, $action);
+        return $this->addRoute(self::$verbs, $uri, $action);
     }
 
     /**
@@ -251,6 +249,21 @@ class Router implements RegistrarContract, BindingRegistrar
         }
 
         $registrar->register($name, $controller, $options);
+    }
+
+    /**
+     * Route an api resource to a controller.
+     *
+     * @param  string  $name
+     * @param  string  $controller
+     * @param  array  $options
+     * @return void
+     */
+    public function apiResource($name, $controller, array $options = [])
+    {
+        $this->resource($name, $controller, array_merge([
+            'only' => ['index', 'show', 'store', 'update', 'destroy'],
+        ], $options));
     }
 
     /**
@@ -550,6 +563,7 @@ class Router implements RegistrarContract, BindingRegistrar
                                 $this->container->make('middleware.disable') === true;
 
         $middleware = $shouldSkipMiddleware ? [] : $this->gatherRouteMiddleware($route);
+
         return (new Pipeline($this->container))
                         ->send($request)
                         ->through($middleware)
@@ -571,6 +585,7 @@ class Router implements RegistrarContract, BindingRegistrar
         $middleware = collect($route->gatherMiddleware())->map(function ($name) {
             return (array) MiddlewareNameResolver::resolve($name, $this->middleware, $this->middlewareGroups);
         })->flatten();
+
         return $this->sortMiddleware($middleware);
     }
 
@@ -938,7 +953,7 @@ class Router implements RegistrarContract, BindingRegistrar
      */
     public function currentRouteNamed($name)
     {
-        return $this->current() ? $this->current()->getName() == $name : false;
+        return $this->current() ? $this->current()->named($name) : false;
     }
 
     /**

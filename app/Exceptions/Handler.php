@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use App\Library\Common;
 
 class Handler extends ExceptionHandler
 {
@@ -32,6 +33,13 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        try{
+            $msgContent = $this->errorContent($exception);
+            $exceptionName = explode('\\', get_class($exception));
+            $title = array_pop($exceptionName);
+            Common::sendMail($title,print_r($msgContent, true),['shaowangzhen@xin.com']);
+        }catch(\Exception $exception){
+        }
         parent::report($exception);
     }
 
@@ -61,5 +69,28 @@ class Handler extends ExceptionHandler
         }
 
         return redirect()->guest('login');
+    }
+
+    public function errorContent($e)
+    {
+        $request = app('Illuminate\Http\Request');
+        $content = [
+            'url'        => $request->url(),
+            'lastError'  => error_get_last(),
+            'errorClass' => get_class($e),
+            'errorFile'  => $e->getFile(),
+            'errorLine'  => $e->getLine(),
+            'errorMsg'   => $e->getMessage(),
+            'sapi'       => PHP_SAPI,
+            'method'     => $request->method(),
+            'request'    => $request->all(),
+            'clientIp'   => '',
+            'userAgent'  => isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'',
+            'cookies'    => $_COOKIE,
+            'serverIp'   => $request->ip(),
+            'headersList'=> headers_list(),
+            'includeFiles' => get_included_files(),
+        ];
+        return $content;
     }
 }

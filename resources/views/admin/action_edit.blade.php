@@ -49,11 +49,11 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="parent_actionid" class="col-sm-2 control-label no-padding-right">父级:</label>
+                    <label for="pid" class="col-sm-2 control-label no-padding-right">父级:</label>
                     <div class="col-sm-4">
-                        <select class="form-control" name="parent_actionid">
+                        <select class="form-control" name="pid">
                             @foreach($parent_lists as $k=>$v)
-                            @if($action['parent_actionid'] == $k)
+                            @if($action['pid'] == $k)
                             <option value="{{$k}}" selected="true">{{$v}}</option>
                             @else
                             <option value="{{$k}}">{{$v}}</option>
@@ -63,9 +63,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="orderid" class="col-sm-2 control-label no-padding-right">排序:</label>
+                    <label for="order_id" class="col-sm-2 control-label no-padding-right">排序:</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="orderid" name="orderid" value='{{$action['orderid']}}'>
+                        <input type="text" class="form-control" id="order_id" name="order_id" value='{{$action['order_id']}}'>
                     </div>
                 </div>
                 <div class="form-group">

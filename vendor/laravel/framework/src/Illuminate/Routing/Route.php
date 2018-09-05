@@ -212,9 +212,11 @@ class Route
     public function getController()
     {
         $class = $this->parseControllerCallback()[0];
+
         if (! $this->controller) {
             $this->controller = $this->container->make($class);
         }
+
         return $this->controller;
     }
 
@@ -603,6 +605,17 @@ class Route
     }
 
     /**
+     * Determine whether the route's name matches the given name.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    public function named($name)
+    {
+        return $this->getName() === $name;
+    }
+
+    /**
      * Set the handler for the route.
      *
      * @param  \Closure|string  $action
@@ -690,6 +703,7 @@ class Route
         }
 
         $this->computedMiddleware = [];
+
         return $this->computedMiddleware = array_unique(array_merge(
             $this->middleware(), $this->controllerMiddleware()
         ), SORT_REGULAR);
@@ -728,6 +742,7 @@ class Route
         if (! $this->isControllerAction()) {
             return [];
         }
+
         return ControllerDispatcher::getMiddleware(
             $this->getController(), $this->getControllerMethod()
         );

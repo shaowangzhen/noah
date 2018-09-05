@@ -81,9 +81,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="orderid" class="col-sm-2 control-label no-padding-right">排序:</label>
+                                <label for="order_id" class="col-sm-2 control-label no-padding-right">排序:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="orderid" name="orderid" placeholder="填写数字,按大到小排序">
+                                    <input type="text" class="form-control" id="order_id" name="order_id" placeholder="填写数字,按大到小排序">
                                 </div>
                             </div>
                             <div class="form-group auth-type">
@@ -112,7 +112,7 @@
                                     <input type="hidden" name="_token" value="{!!csrf_token()!!}" data-info="{!!csrf_token()!!}" class="ctm_2">
                                     <input type="hidden" name="_method" value="POST" data-info="POST" class="ctm_3">
                                     <input type="hidden" name="actionid" value="-1" id="actionid">
-                                    <input type="hidden" name="parent_actionid" value="-1" id="parent_actionid">
+                                    <input type="hidden" name="pid" value="-1" id="pid">
                                     <button type="button" class="btn btn-blue active saveinfo">保存信息</button>
                                 </div>
                             </div>
