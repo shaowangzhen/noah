@@ -48,10 +48,10 @@
                     <div id="horizontal-form">
                         <form class="form-horizontal" role="form" method="post" id ='auth_form' action="{!!URL('admin/action/add')!!}" >
                             <div class="form-group">
-                                <label for="actionname" class="col-sm-2 control-label no-padding-right">权限名称:</label>
+                                <label for="action_name" class="col-sm-2 control-label no-padding-right">权限名称:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control validate" validateContent='{ "ValidateId":"actionname","ValidateTypes":"1",
-                                           "Content":[{ "ErrorMsg":"权限名称不能为空" }]}' id="actionname" name='actionname' placeholder="权限名称">
+                                    <input type="text" class="form-control validate" validateContent='{ "ValidateId":"action_name","ValidateTypes":"1",
+                                           "Content":[{ "ErrorMsg":"权限名称不能为空" }]}' id="action_name" name='action_name' placeholder="权限名称">
 
                                 </div>
                             </div>

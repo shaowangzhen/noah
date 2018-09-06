@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 金融系统-日志管理
+ * 日志管理
  */
 
 namespace App\Http\Controllers\Admin;

@@ -8,12 +8,12 @@ use App\Models\Admin\NoahRoleAction;
 class ActionRepository extends BaseRepository {
     //定义权限编号初始值
     const CODE_START = 100;
-    //put your code here
     public $action;
-    protected $roleActions;
+    public $roleActions;
     
-    public function __construct() {
-        $this->roleActions = new NoahRoleAction();
+    public function __construct(NoahRoleAction $noahRoleAction, NoahAction $noahAction) {
+        $this->roleActions = $noahRoleAction;
+        $this->action = $noahAction;
     }
     public function add_manager($input){
         NoahAction::create($input);
@@ -110,7 +110,7 @@ class ActionRepository extends BaseRepository {
     /**
      * 计算action_code
      */
-    public function update_action_code($actionid)
+    public function updateActionCode($actionid)
     {
         //获取当前记录
         $item = $this->action->find($actionid);
@@ -135,7 +135,7 @@ class ActionRepository extends BaseRepository {
             $code = self::CODE_START;
         }
 
-        $this->action->where('action_id',$actionid)->update(array('code'=>$code));
+        $this->action->where('id',$actionid)->update(array('code'=>$code));
 
     }
     
