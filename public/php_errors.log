@@ -1,0 +1,100 @@
+[10-Sep-2018 10:57:55 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:58:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:58:19 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:58:19 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:58:22 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:59:08 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:59:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:59:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:59:34 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:59:35 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 10:59:43 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 11:00:10 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 11:00:11 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 11:01:48 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 11:01:50 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 11:01:51 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 11:01:51 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 11:01:53 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 11:01:53 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
+[10-Sep-2018 11:01:56 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Foundation\Application::configure() in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php:63
+Stack trace:
+#0 /mnt/hgfs/vmware_share/op/noah/public/index.php(36): require_once()
+#1 {main}
+  thrown in /mnt/hgfs/vmware_share/op/noah/bootstrap/app.php on line 63
